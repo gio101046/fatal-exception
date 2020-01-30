@@ -34,17 +34,27 @@ public class LogoIntroCutscene : Cutscene
 
     IEnumerator RotateCube()
     {
-        const int maxTicks = 80;
+        const int maxTicks = 120;
+        var scale = logoCubic.transform.localScale;
         var angle = logoCubic.transform.eulerAngles;
 
         for (int i = 0; i <= maxTicks; i++)
         {
-            var percent = Easing.SineOut(1f * i / maxTicks);
+            var scaleTime = Easing.SineOut(Mathf.Clamp(1f * i / (maxTicks * .5f), 0f, 1f));
+            var rotTime = Easing.SineOut(1f * i / maxTicks);
+
+            var scaleLerp = new Vector3(
+                Mathf.Lerp(0f, scale.x, scaleTime),
+                Mathf.Lerp(0f, scale.y, scaleTime),
+                Mathf.Lerp(0f, scale.z, scaleTime));
             var angleLerp = new Vector3(
-                Mathf.Lerp(angle.x, angle.x + 360f, percent),
-                Mathf.Lerp(angle.y, angle.y + 360f, percent),
-                Mathf.Lerp(angle.z, angle.z + 360f, percent));
+                Mathf.Lerp(angle.x, angle.x + 360f, rotTime),
+                Mathf.Lerp(angle.y, angle.y + 360f, rotTime),
+                Mathf.Lerp(angle.z, angle.z + 360f, rotTime));
+
+            logoCubic.transform.localScale = scaleLerp;
             logoCubic.transform.eulerAngles = angleLerp;
+
             yield return null;
         }
     }
