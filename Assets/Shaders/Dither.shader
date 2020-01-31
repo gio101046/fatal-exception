@@ -54,7 +54,8 @@ Shader "Oxysoft/Dither"
 				int index = x + y * 4;
 				float lim = 0.0;
 
-				if (x < 8) {
+				if (x < 8) 
+				{
 					if (index == 0) lim = 0.0625;
 					if (index == 1) lim = 0.5625;
 					if (index == 2) lim = 0.1875;
