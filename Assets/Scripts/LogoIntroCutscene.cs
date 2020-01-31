@@ -1,22 +1,18 @@
-﻿using Assets.Scripts;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LogoIntroCutscene : Cutscene
 {
     [SerializeField]
-    GameObject logoCubic;
+    GameObject logoCubic = null;
     [SerializeField]
-    GameObject logoFull;
+    GameObject logoFull = null;
     [SerializeField]
-    SpriteRenderer logoFullRenderer;
+    SpriteRenderer logoFullRenderer = null;
 
     protected override void OnSceneStart()
     {
         logoFull.SetActive(false);
-        logoCubic.SetActive(true);
-        logoCubic.transform.eulerAngles = Vector3.up * 90f;
     }
 
     protected override IEnumerator OnScenePlay()
@@ -24,7 +20,9 @@ public class LogoIntroCutscene : Cutscene
         yield return RotateCube();
         yield return new WaitForSeconds(.2f);
         yield return FadeInLogo();
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
+        yield return FadeOutLogo();
+        yield return new WaitForSeconds(.2f);
     }
 
     protected override void OnSceneEnd()
@@ -70,6 +68,21 @@ public class LogoIntroCutscene : Cutscene
         {
             var percent = Easing.SineIn(1f * i / maxTicks);
             logoFullRenderer.color = Color.Lerp(clearWhite, Color.white, percent);
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeOutLogo()
+    {
+        const int maxTicks = 45;
+        var clearWhite = new Color(1f, 1f, 1f, 0f);
+
+        logoCubic.SetActive(false);
+
+        for (int i = 0; i <= maxTicks; i++)
+        {
+            var percent = Easing.SineOut(1f * i / maxTicks);
+            logoFullRenderer.color = Color.Lerp(Color.white, clearWhite, percent);
             yield return null;
         }
     }

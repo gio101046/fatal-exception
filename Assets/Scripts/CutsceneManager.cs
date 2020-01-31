@@ -3,7 +3,7 @@
 public class CutsceneManager : MonoBehaviour
 {
     [SerializeField]
-    Cutscene cutscene;
+    Cutscene cutscene = null;
 
     void Start()
     {
