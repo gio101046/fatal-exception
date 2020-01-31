@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LogoIntroCutscene : Cutscene
 {
@@ -20,14 +21,17 @@ public class LogoIntroCutscene : Cutscene
         yield return RotateCube();
         yield return new WaitForSeconds(.2f);
         yield return FadeInLogo();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.1f);
         yield return FadeOutLogo();
         yield return new WaitForSeconds(.2f);
     }
 
     protected override void OnSceneEnd()
     {
-        // TODO: Go to the next scene.
+        var nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+        if (SceneManager.sceneCountInBuildSettings > nextIndex)
+            SceneManager.LoadScene(nextIndex);
     }
 
     IEnumerator RotateCube()
