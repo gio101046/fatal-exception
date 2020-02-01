@@ -7,17 +7,22 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float jumpSpeed = 10f;
     [SerializeField] private float runFasterFactor = 1.5f;
+    [SerializeField] private float groundErrorThreshold = 0.01f;
 
     private Rigidbody2D rigidbody;
+    private PolygonCollider2D collider;
+    private bool isInEncounter = false;
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        collider = GetComponent<PolygonCollider2D>();
     }
 
     private void Update()
     {
-        Debug.Log(HasEncounteredEnemy());
+        //isInEncounter = HasEncounteredEnemy();
+        //if (isInEncounter)
         MovePlayer();
     }
 
@@ -29,10 +34,8 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        var playerOnGround = rigidbody.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground));
-
         // Jump
-        if (Input.GetKey(KeyCode.Space) && playerOnGround)
+        if (Input.GetKey(KeyCode.Space) && IsPlayerOnGround())
         {
             rigidbody.velocity += new Vector2(0, jumpSpeed);
             rigidbody.velocity = new Vector2(rigidbody.velocity.x,
@@ -59,6 +62,16 @@ public class Player : MonoBehaviour
         {
             rigidbody.velocity = new Vector2(actualRunSpeed * -1, rigidbody.velocity.y);
         }
+    }
+
+    private bool IsPlayerOnGround()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, 
+                                             -Vector2.up, 
+                                             1f + groundErrorThreshold, 
+                                             LayerMask.GetMask(LayerNames.Ground));
+
+        return hit.collider != null && hit.collider.IsTouching(collider);
     }
 
     private bool HasEncounteredEnemy()
