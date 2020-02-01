@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float jumpSpeed = 10f;
     [SerializeField] private float runFasterFactor = 1.5f;
-    [SerializeField] private float groundErrorThreshold = 0.01f;
+    [SerializeField] private float groundErrorThreshold = 0.05f;
+    [SerializeField] private float runErrorThreshold = 0.05f;
 
     private Rigidbody2D rigidBody;
     new private BoxCollider2D collider;
@@ -104,7 +105,7 @@ public class Player : MonoBehaviour
 
     private void HandleAnimations()
     {
-        animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > float.Epsilon);
+        animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold);
         animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
     }
