@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,12 +8,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float jumpSpeed = 10f;
     [SerializeField] private float runFasterFactor = 1.5f;
-    [SerializeField] private float groundErrorThreshold = 0.01f;
+    [SerializeField] private float groundErrorThreshold = 0.05f;
+    [SerializeField] private float wallLineCaseDistance = 0.5f;
+    [SerializeField] private float runErrorThreshold = 0.05f;
 
     private Rigidbody2D rigidBody;
-    private BoxCollider2D collider;
+    new private BoxCollider2D collider;
     private Animator animator;
-    private bool isInEncounter = false;
+
+    private Vector2 wallLineCaseDistanceVector => new Vector2(wallLineCaseDistance, 0);
 
     private void Start()
     {
@@ -23,8 +27,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        //isInEncounter = HasEncounteredEnemy();
-        //if (isInEncounter)
         MovePlayer();
     }
 
@@ -33,7 +35,6 @@ public class Player : MonoBehaviour
         Jump();
         Run();
         FlipSprite();
-        //MarkAsRunning();
         HandleAnimations();
     }
 
@@ -50,6 +51,9 @@ public class Player : MonoBehaviour
 
     private void Run()
     {
+        if (IsPlayerOnWall())
+            return;
+
         var actualRunSpeed = runSpeed;
 
         // Speed Run Increase
@@ -71,12 +75,38 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerOnGround()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, 
-                                             -Vector2.up, 
-                                             1f + groundErrorThreshold, 
+        return IsPointOnGround(transform.position + new Vector3(0.3f, 0, 0)) ||
+               IsPointOnGround(transform.position + new Vector3(-0.3f, 0, 0));
+    }
+
+    private bool IsPointOnGround(Vector2 position)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(position,
+                                             -Vector2.up,
+                                             groundErrorThreshold,
                                              LayerMask.GetMask(LayerNames.Ground));
 
         return hit.collider != null && hit.collider.IsTouching(collider);
+    }
+
+    private bool IsPlayerOnWall()
+    {
+        return IsPointOnWall(transform.position + new Vector3(0, 1, 0)) ||
+               IsPointOnWall(transform.position + new Vector3(0, -1, 0)) ||
+               IsPointOnWall(transform.position + new Vector3(0, -2, 0));
+    }
+
+    private bool IsPointOnWall(Vector2 position)
+    {
+        var rightHit = Physics2D.Linecast(position,
+                                          position + wallLineCaseDistanceVector,
+                                          LayerMask.GetMask(LayerNames.Ground));
+        var leftHit = Physics2D.Linecast(position,
+                                         position - wallLineCaseDistanceVector,
+                                         LayerMask.GetMask(LayerNames.Ground));
+
+        return ((rightHit.collider != null && rightHit.collider.IsTouching(collider)) ||
+               (leftHit.collider != null && leftHit.collider.IsTouching(collider))) && !IsPlayerOnGround();
     }
 
     private bool HasEncounteredEnemy()
@@ -86,27 +116,15 @@ public class Player : MonoBehaviour
 
     private void FlipSprite()
     {
-        if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)))
+        if (Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)))
         {
             transform.localScale = new Vector2(Mathf.Sign(rigidBody.velocity.x), 1f);
         }
     }
 
-    private void MarkAsRunning()
-    {
-        if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon)
-        {
-            animator.SetBool("IsRunning", true);
-        }
-        else
-        {
-            animator.SetBool("IsRunning", false);
-        }
-    }
-
     private void HandleAnimations()
     {
-        animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > float.Epsilon);
+        animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold);
         animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
     }
