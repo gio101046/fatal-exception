@@ -1317,10 +1317,15 @@ PrefabInstance:
       propertyPath: m_BodyType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3827363133515929334, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3827363133515929335, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a,
         type: 3}
       propertyPath: movementSpeed
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3827363133515929335, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a,
         type: 3}
@@ -1330,7 +1335,7 @@ PrefabInstance:
     - target: {fileID: 3827363133515929335, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a,
         type: 3}
       propertyPath: secondsGoingRight
-      value: 2
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a, type: 3}

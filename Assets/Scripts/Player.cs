@@ -9,8 +9,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float runFasterFactor = 1.5f;
 
     private Rigidbody2D rigidbody;
-    private string enemiesLayerName => "Enemies";
-    private string groundLayerName => "Ground";
 
     private void Start()
     {
@@ -31,7 +29,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        var playerOnGround = rigidbody.IsTouchingLayers(LayerMask.GetMask(groundLayerName));
+        var playerOnGround = rigidbody.IsTouchingLayers(LayerMask.GetMask(LayerNames.Ground));
 
         // Jump
         if (Input.GetKey(KeyCode.Space) && playerOnGround)
@@ -65,6 +63,6 @@ public class Player : MonoBehaviour
 
     private bool HasEncounteredEnemy()
     {
-        return rigidbody.IsTouchingLayers(LayerMask.GetMask(enemiesLayerName));
+        return rigidbody.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemies));
     }
 }
