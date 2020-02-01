@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,9 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundErrorThreshold = 0.01f;
 
     private Rigidbody2D rigidBody;
-    private BoxCollider2D collider;
+    new private BoxCollider2D collider;
     private Animator animator;
-    private bool isInEncounter = false;
 
     private void Start()
     {
@@ -23,8 +23,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        //isInEncounter = HasEncounteredEnemy();
-        //if (isInEncounter)
         MovePlayer();
     }
 
@@ -33,13 +31,14 @@ public class Player : MonoBehaviour
         Jump();
         Run();
         FlipSprite();
-        MarkAsRunning();
+        //MarkAsRunning();
+        HandleAnimations();
     }
 
     private void Jump()
     {
         // Jump
-        if (Input.GetKey(KeyCode.Space) && IsPlayerOnGround())
+        if (Input.GetKeyDown(KeyCode.Space) && IsPlayerOnGround())
         {
             rigidBody.velocity += new Vector2(0, jumpSpeed);
             rigidBody.velocity = new Vector2(rigidBody.velocity.x,
@@ -101,5 +100,12 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("IsRunning", false);
         }
+    }
+
+    private void HandleAnimations()
+    {
+        animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > float.Epsilon);
+        animator.SetBool("IsGround", IsPlayerOnGround());
+        animator.SetFloat("YVelocity", rigidBody.velocity.y);
     }
 }
