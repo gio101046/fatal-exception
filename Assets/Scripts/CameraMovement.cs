@@ -6,7 +6,8 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] float offsetY = 0;
-    [SerializeField] float interpolate = 0.2f; 
+    [SerializeField] float offsetZ = -10;
+    [SerializeField] float interpolate = 0.2f;
 
     private void Start()
     {
@@ -16,5 +17,6 @@ public class CameraMovement : MonoBehaviour
     private void Update()
     {
         transform.position = Vector2.Lerp(transform.position, player.transform.position + new Vector3(0, offsetY, 0), interpolate);
+        transform.position = new Vector3(transform.position.x, transform.position.y, offsetZ);
     }
 }

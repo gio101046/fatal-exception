@@ -1,6 +1,7 @@
 ﻿using Assets.Model;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,7 +9,10 @@ public class EventControls : MonoBehaviour
 {
     [SerializeField] private Camera camera;
     [SerializeField] private Tile tile;
+    [SerializeField] private List<Tile> tiles;
+    [SerializeField] private List<Tile> successTiles;
     [SerializeField] private Tile successTile;
+    [SerializeField] private Tile plusTile;
     [SerializeField] private float framesPerControlTile = 15;
     [SerializeField] private int nextControlYOffset = 0;
     [SerializeField] private int nextControlXOffset = 0;
@@ -32,7 +36,9 @@ public class EventControls : MonoBehaviour
     private Collider2D currentPlayerCollider;
     private Collider2D currentEnemyCollider;
 
-    private Queue<EventControlTile> eventControlTilesInCycle;
+    private List<EventControlTile> eventControlTilesInCycle;
+    private Queue<EventControlTile> eventControlTilesInCycleQueue;
+    private bool? isControlTile = null;
 
     private int framesPerSecond => 60;
     private Vector3Int nextControlOffSetAsVector => new Vector3Int(nextControlXOffset, nextControlYOffset, 0);
@@ -55,7 +61,7 @@ public class EventControls : MonoBehaviour
     private void Start()
     { 
         tilemap = GetComponent<Tilemap>();
-        eventControlTilesInCycle = new Queue<EventControlTile>();
+        eventControlTilesInCycle = new List<EventControlTile>();
     }
 
     private void Update()
@@ -85,10 +91,28 @@ public class EventControls : MonoBehaviour
                 initialCameraPosition = GetCameraPosition();
 
             // Store tiles for event cycle
-            var eventControlTile = new EventControlTile(KeyCode.W, tile, successTile, GetNextTilePosition() + nextControlOffSetAsVector); /* TODO: Hard code */
-            eventControlTilesInCycle.Enqueue(eventControlTile);
+            EventControlTile eventControlTile = null;
+            if (isControlTile == null || isControlTile.GetValueOrDefault())
+            {
+                eventControlTile = new EventControlTile(KeyCode.Q,
+                                                        tile,
+                                                        successTile,
+                                                        GetNextTilePosition() + nextControlOffSetAsVector); /* TODO: Hard code */
+                isControlTile = false;
+            }
+            else
+            {
+                eventControlTile = new EventControlTile(KeyCode.Escape,
+                                                        plusTile,
+                                                        null,
+                                                        GetNextTilePosition() + nextControlOffSetAsVector,
+                                                        true); /* TODO: Hard code */
+                isControlTile = true;
+            }
 
-            tilemap.SetTile(eventControlTile.position, tile);
+            eventControlTilesInCycle.Add(eventControlTile);
+
+            tilemap.SetTile(eventControlTile.position, eventControlTile.tile);
 
             nextControlAccumalator = 0;
             numberOfControlTilesSet++;
@@ -96,6 +120,7 @@ public class EventControls : MonoBehaviour
         else if (numberOfControlTilesSet == maxNumberOfControlTiles)
         {
             initialCameraPosition = null;
+            isControlTile = null;
             eventDrawn = true;
         }
         else
@@ -122,14 +147,15 @@ public class EventControls : MonoBehaviour
         nextControlAccumalator = 0;
 
         if (currentEventControl == null)
-            currentEventControl = eventControlTilesInCycle.Dequeue();
+            currentEventControl = eventControlTilesInCycle.First(x => !x.isPlusTile && !x.isPerformed);
 
         if (Input.GetKeyDown(currentEventControl.keyCode))
         {
+            currentEventControl.isPerformed = true;
             tilemap.SetTile(currentEventControl.position, currentEventControl.successTile);
 
             currentEventControl = null;
-            if (eventControlTilesInCycle.Count == 0)
+            if (eventControlTilesInCycle.Where(x => !x.isPlusTile && !x.isPerformed).Count() == 0)
             {
                 eventTriggered = false;
                 eventCycleAccumalator = 0;

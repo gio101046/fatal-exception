@@ -14,13 +14,16 @@ namespace Assets.Model
         public Tile tile;
         public Tile successTile;
         public Vector3Int position;
+        public bool isPlusTile;
+        public bool isPerformed;
 
-        public EventControlTile(KeyCode keyCode, Tile tile, Tile successTile, Vector3Int position)
+        public EventControlTile(KeyCode keyCode, Tile tile, Tile successTile, Vector3Int position, bool isPlusTile = false)
         {
             this.keyCode = keyCode;
             this.tile = tile;
             this.successTile = successTile;
             this.position = position;
+            this.isPlusTile = isPlusTile;
         }
     }
 }

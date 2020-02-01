@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
 
     private void FlipSprite()
     {
-        if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)))
+        if (Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)))
         {
             transform.localScale = new Vector2(Mathf.Sign(rigidBody.velocity.x), 1f);
         }
