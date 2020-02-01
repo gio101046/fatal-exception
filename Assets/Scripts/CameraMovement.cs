@@ -15,6 +15,6 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        transform.position = Vector2.Lerp(transform.position, player.transform.position + new Vector3(0, offsetY, 0), .2f);
+        transform.position = Vector2.Lerp(transform.position, player.transform.position + new Vector3(0, offsetY, 0), interpolate);
     }
 }
