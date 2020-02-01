@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class BugMovement : MonoBehaviour
 {
-    [SerializeField] private int secondsGoingLeft = 1;
-    [SerializeField] private int secondsGoingRight = 1;
+    [SerializeField] private float secondsGoingLeft = 1;
+    [SerializeField] private float secondsGoingRight = 1;
     [SerializeField] private float movementSpeed = 10;
+    [SerializeField] PolygonCollider2D playerCollider;
 
     private int leftAccumalator = 0;
     private int rightAccumalator = 0;
@@ -16,8 +17,7 @@ public class BugMovement : MonoBehaviour
 
     private void Start()
     {
-        // Physics2D.IgnoreLayerCollision(LayerMask.GetMask())
-
+        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), playerCollider);
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
