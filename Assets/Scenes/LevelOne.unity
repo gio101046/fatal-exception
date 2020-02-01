@@ -1080,7 +1080,7 @@ MonoBehaviour:
   jumpSpeed: 35
   runFasterFactor: 1.5
   groundErrorThreshold: 3
-  wallLineCaseDistance: 1.5
+  wallLineCaseDistance: 1
   runErrorThreshold: 0.05
 --- !u!95 &1671840923
 Animator:
