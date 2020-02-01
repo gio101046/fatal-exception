@@ -33,7 +33,8 @@ public class Player : MonoBehaviour
         Jump();
         Run();
         FlipSprite();
-        MarkAsRunning();
+        //MarkAsRunning();
+        HandleAnimations();
     }
 
     private void Jump()
@@ -95,11 +96,18 @@ public class Player : MonoBehaviour
     {
         if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon)
         {
-            //animator.SetBool("IsRunning", true);
+            animator.SetBool("IsRunning", true);
         }
         else
         {
-            //animator.SetBool("IsRunning", false);
+            animator.SetBool("IsRunning", false);
         }
+    }
+
+    private void HandleAnimations()
+    {
+        animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > float.Epsilon);
+        animator.SetBool("IsOnGround", IsPlayerOnGround());
+        animator.SetFloat("YVelocity", rigidBody.velocity.y);
     }
 }
