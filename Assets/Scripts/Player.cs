@@ -9,14 +9,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float runFasterFactor = 1.5f;
     [SerializeField] private float groundErrorThreshold = 0.01f;
 
-    private Rigidbody2D rigidbody;
-    private PolygonCollider2D collider;
+    private Rigidbody2D rigidBody;
+    private BoxCollider2D collider;
+    private Animator animator;
     private bool isInEncounter = false;
 
     private void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-        collider = GetComponent<PolygonCollider2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
+        collider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour
     {
         Jump();
         Run();
+        FlipSprite();
+        MarkAsRunning();
     }
 
     private void Jump()
@@ -37,9 +41,9 @@ public class Player : MonoBehaviour
         // Jump
         if (Input.GetKey(KeyCode.Space) && IsPlayerOnGround())
         {
-            rigidbody.velocity += new Vector2(0, jumpSpeed);
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x,
-                                             Mathf.Clamp(rigidbody.velocity.y, 0, jumpSpeed));
+            rigidBody.velocity += new Vector2(0, jumpSpeed);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x,
+                                             Mathf.Clamp(rigidBody.velocity.y, 0, jumpSpeed));
         }
     }
 
@@ -56,11 +60,11 @@ public class Player : MonoBehaviour
         // Run
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            rigidbody.velocity = new Vector2(actualRunSpeed, rigidbody.velocity.y);
+            rigidBody.velocity = new Vector2(actualRunSpeed, rigidBody.velocity.y);
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            rigidbody.velocity = new Vector2(actualRunSpeed * -1, rigidbody.velocity.y);
+            rigidBody.velocity = new Vector2(actualRunSpeed * -1, rigidBody.velocity.y);
         }
     }
 
@@ -76,6 +80,26 @@ public class Player : MonoBehaviour
 
     private bool HasEncounteredEnemy()
     {
-        return rigidbody.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemies));
+        return rigidBody.IsTouchingLayers(LayerMask.GetMask(LayerNames.Enemies));
+    }
+
+    private void FlipSprite()
+    {
+        if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)))
+        {
+            transform.localScale = new Vector2(Mathf.Sign(rigidBody.velocity.x), 1f);
+        }
+    }
+
+    private void MarkAsRunning()
+    {
+        if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon)
+        {
+            animator.SetBool("IsRunning", true);
+        }
+        else
+        {
+            animator.SetBool("IsRunning", false);
+        }
     }
 }
