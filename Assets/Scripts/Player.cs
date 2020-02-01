@@ -95,11 +95,11 @@ public class Player : MonoBehaviour
     {
         if (Mathf.Abs(rigidBody.velocity.x) > Mathf.Epsilon)
         {
-            animator.SetBool("IsRunning", true);
+            //animator.SetBool("IsRunning", true);
         }
         else
         {
-            animator.SetBool("IsRunning", false);
+            //animator.SetBool("IsRunning", false);
         }
     }
 }
