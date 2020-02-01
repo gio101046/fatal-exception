@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 5875687446670976453
-    second: KatBug_0
+    second: KatBug0
   - first:
       213: 7736766425618006454
-    second: KatBug_1
+    second: KatBug1
   - first:
       213: 3280950127566773269
-    second: KatBug_2
+    second: KatBug2
   - first:
       213: -8924824664453206661
-    second: KatBug_3
+    second: KatBug3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,84 +110,84 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KatBug_0
+      name: KatBug0
       rect:
         serializedVersion: 2
         x: 0
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f4e391968fcf9d49970d99d64690f0a
+      spriteID: f5924d52da99945408e636c8884a6990
       internalID: 5875687446670976453
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: KatBug_1
+      name: KatBug1
       rect:
         serializedVersion: 2
         x: 64
         y: 64
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2f7c5fbbb87128a479ae7e7eea6295d8
+      spriteID: 2cb774fc754a1594991edf9c9bbb933e
       internalID: 7736766425618006454
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: KatBug_2
+      name: KatBug2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1d2d498f1c1e82045a815f4805ce3e37
+      spriteID: 79c1bd5e65859c44dbe562d3a59dc60b
       internalID: 3280950127566773269
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: KatBug_3
+      name: KatBug3
       rect:
         serializedVersion: 2
         x: 64
         y: 0
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bacae02e7339d8b4cb8459a0ee11b233
+      spriteID: e0a2841ce7fc12a49946571cd2410282
       internalID: -8924824664453206661
       vertices: []
       indices: 
