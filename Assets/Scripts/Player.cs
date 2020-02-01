@@ -107,7 +107,7 @@ public class Player : MonoBehaviour
     private void HandleAnimations()
     {
         animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > float.Epsilon);
-        animator.SetBool("IsOnGround", IsPlayerOnGround());
+        animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
     }
 }

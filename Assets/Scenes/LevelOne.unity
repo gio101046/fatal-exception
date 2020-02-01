@@ -167,9 +167,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 1337282922}
   tile: {fileID: 11400000, guid: 7ece7857530facb42b843eed2526c86a, type: 2}
+  successTile: {fileID: 11400000, guid: 6cf7a50810d16f2468acc06180743d07, type: 2}
   framesPerControlTile: 15
   nextControlYOffset: 4
-  nextControlXOffset: 1.5
+  nextControlXOffset: 2.5
 --- !u!483693784 &1491656
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -389,7 +390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1671840916}
   offsetY: 2
-  interpolate: 0.1
+  interpolate: 0.6
 --- !u!4 &1146013793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5711328081315814049, guid: fe8fb0c1c30f84b43885e84de26e0f11,
