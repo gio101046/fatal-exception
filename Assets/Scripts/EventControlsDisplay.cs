@@ -19,7 +19,6 @@ public class EventControlsDisplay : MonoBehaviour
     private void Start()
     { 
         tilemap = GetComponent<Tilemap>();
-        
     }
 
     private void Update()
