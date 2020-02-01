@@ -7,9 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float jumpSpeed = 10f;
     [SerializeField] private float runFasterFactor = 1.5f;
-    [SerializeField] GameObject ground;
 
-    Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody;
+    private string enemiesLayerName => "Enemies";
+    private string groundLayerName => "Ground";
 
     private void Start()
     {
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(HasEncounteredEnemy());
         MovePlayer();
     }
 
@@ -29,7 +31,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        var playerOnGround = rigidbody.IsTouching(ground.GetComponent<CompositeCollider2D>());
+        var playerOnGround = rigidbody.IsTouchingLayers(LayerMask.GetMask(groundLayerName));
 
         // Jump
         if (Input.GetKey(KeyCode.Space) && playerOnGround)
@@ -59,6 +61,10 @@ public class Player : MonoBehaviour
         {
             rigidbody.velocity = new Vector2(actualRunSpeed * -1, rigidbody.velocity.y);
         }
+    }
 
+    private bool HasEncounteredEnemy()
+    {
+        return rigidbody.IsTouchingLayers(LayerMask.GetMask(enemiesLayerName));
     }
 }
