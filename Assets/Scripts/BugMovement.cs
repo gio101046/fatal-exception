@@ -7,7 +7,7 @@ public class BugMovement : MonoBehaviour
     [SerializeField] private float secondsGoingLeft = 1;
     [SerializeField] private float secondsGoingRight = 1;
     [SerializeField] private float movementSpeed = 10;
-    [SerializeField] PolygonCollider2D playerCollider;
+    [SerializeField] BoxCollider2D playerCollider;
 
     private int leftAccumalator = 0;
     private int rightAccumalator = 0;
