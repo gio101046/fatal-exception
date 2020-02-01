@@ -48,12 +48,12 @@ public class BugMovement : MonoBehaviour
     private void MoveLeft()
     {
         var actualSpeed = movementSpeed * -1;
-        rigidBody.velocity += new Vector2(actualSpeed, 0);
+        rigidBody.velocity = new Vector2(actualSpeed, rigidBody.velocity.y);
     }
 
     private void MoveRight()
     {
         var actualSpeed = movementSpeed;
-        rigidBody.velocity += new Vector2(actualSpeed, 0);
+        rigidBody.velocity = new Vector2(actualSpeed, rigidBody.velocity.y);
     }
 }

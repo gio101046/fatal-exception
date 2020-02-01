@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float runFasterFactor = 1.5f;
 
     private Rigidbody2D rigidbody;
+    private bool isInEncounter = false;
 
     private void Start()
     {
