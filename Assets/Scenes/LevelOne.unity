@@ -168,8 +168,8 @@ MonoBehaviour:
   camera: {fileID: 1337282922}
   tile: {fileID: 11400000, guid: 7ece7857530facb42b843eed2526c86a, type: 2}
   framesPerControlTile: 15
-  nextControlYOffset: 1
-  nextControlXOffset: -2
+  nextControlYOffset: 4
+  nextControlXOffset: 1.5
 --- !u!483693784 &1491656
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -388,7 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1671840916}
-  offsetY: 0
+  offsetY: 2
   interpolate: 0.1
 --- !u!4 &1146013793 stripped
 Transform:
@@ -521,7 +521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671840916}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.5, y: -4, z: 0}
+  m_LocalPosition: {x: -5, y: -4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1008122163}
