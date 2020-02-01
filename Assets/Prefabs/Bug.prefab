@@ -121,10 +121,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f777aa09d2ced42baa1cc6bf9dbe54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondsGoingLeft: 1
-  secondsGoingRight: 1
-  movementSpeed: 5
+  secondsGoingLeft: 0.8
+  secondsGoingRight: 0.8
+  movementSpeed: 2
   playerCollider: {fileID: 0}
+  eventControls: {fileID: 0}
 --- !u!50 &3827363133515929334
 Rigidbody2D:
   serializedVersion: 4

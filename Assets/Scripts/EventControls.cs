@@ -10,8 +10,8 @@ public class EventControls : MonoBehaviour
     [SerializeField] private Tile tile;
     [SerializeField] private Tile successTile;
     [SerializeField] private float framesPerControlTile = 15;
-    [SerializeField] private float nextControlYOffset = 0;
-    [SerializeField] private float nextControlXOffset = 0;
+    [SerializeField] private int nextControlYOffset = 0;
+    [SerializeField] private int nextControlXOffset = 0;
     [SerializeField] private float tileMapClearDelayInSeconds = 0.5f;
 
     private Tilemap tilemap;
@@ -24,20 +24,38 @@ public class EventControls : MonoBehaviour
 
     private bool eventDrawn = false;
     private bool eventTriggered = false;
-    private int eventCycleInSeconds = 4;
+    private int eventCycleInSeconds = 2;
     private int eventCycleAccumalator = 0;
     private int tileMapClearDelayAccumalator = 0;
     private EventControlTile currentEventControl;
 
+    private Collider2D currentPlayerCollider;
+    private Collider2D currentEnemyCollider;
+
     private Queue<EventControlTile> eventControlTilesInCycle;
 
     private int framesPerSecond => 60;
+    private Vector3Int nextControlOffSetAsVector => new Vector3Int(nextControlXOffset, nextControlYOffset, 0);
+
+    public void TriggerEvent(Collider2D playerCollider, Collider2D enemyCollider)
+    {
+        currentPlayerCollider = playerCollider;
+        currentEnemyCollider = enemyCollider;
+        Physics2D.IgnoreCollision(playerCollider, enemyCollider, true);
+
+        eventTriggered = true;
+    }
+
+    public bool IsEventTriggered()
+    {
+
+        return eventTriggered;
+    }
 
     private void Start()
     { 
         tilemap = GetComponent<Tilemap>();
         eventControlTilesInCycle = new Queue<EventControlTile>();
-        eventTriggered = true; // TODO: TEST
     }
 
     private void Update()
@@ -45,42 +63,17 @@ public class EventControls : MonoBehaviour
         if (eventTriggered)
         {
             SetTile();
-            SetTileMapPosition();
-        }
-        else
-        {
-            nextControlAccumalator = 0;
+            //SetTileMapPosition();
         }
 
         if (eventDrawn && eventTriggered)
         {
-            if (currentEventControl == null)
-                currentEventControl = eventControlTilesInCycle.Dequeue();
-
-            if (Input.GetKeyDown(currentEventControl.keyCode))
-            {
-                tilemap.SetTile(currentEventControl.position, currentEventControl.successTile);
-
-                currentEventControl = null;
-                if (eventControlTilesInCycle.Count == 0)
-                {
-                    eventTriggered = false;
-                }
-            }
+            PerformControlEvent();
         }
         
         if (eventDrawn && !eventTriggered)
         {
-            if (tileMapClearDelayAccumalator >= tileMapClearDelayInSeconds * framesPerSecond)
-            {
-                tilemap.ClearAllTiles();
-                tileMapClearDelayAccumalator = 0;
-                eventDrawn = false;
-            }
-            else
-            {
-                tileMapClearDelayAccumalator++;
-            }
+            Reset();
         }
     }
 
@@ -92,7 +85,7 @@ public class EventControls : MonoBehaviour
                 initialCameraPosition = GetCameraPosition();
 
             // Store tiles for event cycle
-            var eventControlTile = new EventControlTile(KeyCode.W, tile, successTile, GetNextTilePosition()); /* TODO: Hard code */
+            var eventControlTile = new EventControlTile(KeyCode.W, tile, successTile, GetNextTilePosition() + nextControlOffSetAsVector); /* TODO: Hard code */
             eventControlTilesInCycle.Enqueue(eventControlTile);
 
             tilemap.SetTile(eventControlTile.position, tile);
@@ -105,8 +98,10 @@ public class EventControls : MonoBehaviour
             initialCameraPosition = null;
             eventDrawn = true;
         }
-
-        nextControlAccumalator++;
+        else
+        {
+            nextControlAccumalator++;
+        }
     }
 
     private Vector3Int GetCameraPosition()
@@ -122,9 +117,56 @@ public class EventControls : MonoBehaviour
                .GetValueOrDefault();
     }
 
+    private void PerformControlEvent()
+    {
+        nextControlAccumalator = 0;
+
+        if (currentEventControl == null)
+            currentEventControl = eventControlTilesInCycle.Dequeue();
+
+        if (Input.GetKeyDown(currentEventControl.keyCode))
+        {
+            tilemap.SetTile(currentEventControl.position, currentEventControl.successTile);
+
+            currentEventControl = null;
+            if (eventControlTilesInCycle.Count == 0)
+            {
+                eventTriggered = false;
+                eventCycleAccumalator = 0;
+            }
+        }
+        else if (eventCycleAccumalator >= eventCycleInSeconds * framesPerSecond)
+        {
+
+        }
+        else
+        {
+            eventCycleAccumalator++;
+        }
+    }
+
+    private void Reset()
+    {
+        if (tileMapClearDelayAccumalator >= tileMapClearDelayInSeconds * framesPerSecond)
+        {
+            tilemap.ClearAllTiles();
+            tileMapClearDelayAccumalator = 0;
+            eventDrawn = false;
+            numberOfControlTilesSet = 0;
+
+            Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
+            currentPlayerCollider = null;
+            currentEnemyCollider = null;
+        }
+        else
+        {
+            tileMapClearDelayAccumalator++;
+        }
+    }
+
     private void SetTileMapPosition()
     {
         transform.position = camera.transform.position + 
-                             new Vector3(nextControlXOffset, nextControlYOffset, 0); // offset
+                             new Vector3Int(nextControlXOffset, nextControlYOffset, 0); // offset
     }
 }

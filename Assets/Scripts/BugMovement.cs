@@ -8,6 +8,7 @@ public class BugMovement : MonoBehaviour
     [SerializeField] private float secondsGoingRight = 1;
     [SerializeField] private float movementSpeed = 10;
     [SerializeField] BoxCollider2D playerCollider;
+    [SerializeField] EventControls eventControls;
 
     private int leftAccumalator = 0;
     private int rightAccumalator = 0;
@@ -17,13 +18,15 @@ public class BugMovement : MonoBehaviour
 
     private void Start()
     {
-        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), playerCollider);
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (HasEncounteredPlayer())
+            eventControls.TriggerEvent(playerCollider, GetComponent<BoxCollider2D>());
+
         var totalFramesGoingLeft = framesPerSecond * secondsGoingLeft;
         var totalFramesGoingRight = framesPerSecond * secondsGoingRight;
 
@@ -55,5 +58,10 @@ public class BugMovement : MonoBehaviour
     {
         var actualSpeed = movementSpeed;
         rigidBody.velocity = new Vector2(actualSpeed, rigidBody.velocity.y);
+    }
+
+    private bool HasEncounteredPlayer()
+    {
+        return rigidBody.IsTouchingLayers(LayerMask.GetMask(LayerNames.Player));
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,9 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundErrorThreshold = 0.01f;
 
     private Rigidbody2D rigidBody;
-    private BoxCollider2D collider;
+    new private BoxCollider2D collider;
     private Animator animator;
-    private bool isInEncounter = false;
 
     private void Start()
     {
@@ -23,8 +23,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        //isInEncounter = HasEncounteredEnemy();
-        //if (isInEncounter)
         MovePlayer();
     }
 
