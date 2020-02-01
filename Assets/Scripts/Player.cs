@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         // Jump
-        if (Input.GetKey(KeyCode.Space) && IsPlayerOnGround())
+        if (Input.GetKeyDown(KeyCode.Space) && IsPlayerOnGround())
         {
             rigidBody.velocity += new Vector2(0, jumpSpeed);
             rigidBody.velocity = new Vector2(rigidBody.velocity.x,
