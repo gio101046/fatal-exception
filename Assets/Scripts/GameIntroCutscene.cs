@@ -79,6 +79,7 @@ public class GameIntroCutscene : Cutscene
         yield return new WaitForSeconds(.8f);
 
         sceneC.sprite = sprites[3];
+        SoundManagerScript.PlaySound("slam");
         Shake(15);
 
         yield return new WaitForSeconds(1f);
@@ -120,6 +121,7 @@ public class GameIntroCutscene : Cutscene
 
         sceneC.sprite = sprites[2];
         sceneB.sprite = sprites[6];
+        SoundManagerScript.PlaySound("slam");
         Shake(20);
 
         yield return new WaitForSeconds(1.5f);
