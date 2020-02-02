@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
         // Jump
         if (Input.GetKeyDown(KeyCode.Space) && IsPlayerOnGround())
         {
+            SoundManagerScript.PlaySound("jump");
             rigidBody.velocity += new Vector2(0, jumpSpeed);
             rigidBody.velocity = new Vector2(rigidBody.velocity.x,
                                              Mathf.Clamp(rigidBody.velocity.y, 0, jumpSpeed));
