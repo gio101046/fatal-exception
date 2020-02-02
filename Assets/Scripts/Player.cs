@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool isMovementEnabled = true;
     private bool isFighting = false;
+    private bool isHurt = false;
 
     private bool isPlayerHurt = false;
 
@@ -38,11 +40,13 @@ public class Player : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
-        currentHealth = 1; // startHealth;
-        currentStamina = 50; // startStamina;
+
+        currentHealth = startHealth;
         healthBar.size = new Vector2(1.5f * startHealth, healthBar.size.y);
+
+        currentStamina = startStamina;
         staminaInitialSize = staminaBar.size.x;
-        staminaBar.size = new Vector2(staminaInitialSize * 0.5f, staminaBar.size.y);
+        staminaBar.size = new Vector2(staminaInitialSize, staminaBar.size.y);
     }
 
     private void Update()
@@ -76,8 +80,8 @@ public class Player : MonoBehaviour
     {
         if (coll.gameObject.tag == "Pizza")
         {
-            Destroy(coll.gameObject);
             SoundManagerScript.PlaySound("eat");
+            Destroy(coll.gameObject);
             currentHealth += currentHealth < startHealth ? 1 : 0;
             healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
         }
@@ -101,11 +105,27 @@ public class Player : MonoBehaviour
     {
         int result = currentStamina - GetStaminaValueChange(bugStaminaDamagePercent);
         currentStamina = result < 0 ? 0 : result;
+        float multiplier = currentStamina * 1f / startStamina;
+        staminaBar.size = new Vector2(staminaInitialSize * multiplier, staminaBar.size.y);
     }
 
     private int GetStaminaValueChange(int percentage)
     {
-        return currentStamina < startStamina ? (startStamina * percentage / 100) : 0;
+        return currentStamina <= startStamina ? (startStamina * percentage / 100) : 0;
+    }
+
+    private void Hurt()
+    {
+        currentHealth = 3; // TODO: REMOVE!
+        currentHealth -= currentHealth > 0 ? 1 : 0;
+        healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+
+        if (currentHealth <= 0) GameOver();
+    }
+
+    private void GameOver() 
+    {
+        SceneManager.LoadScene("GameOver");
     }
 
 
@@ -117,6 +137,13 @@ public class Player : MonoBehaviour
             Run();
             FlipSprite();
         }
+
+        if (Mathf.Abs(rigidBody.velocity.y) < runErrorThreshold)
+        {
+            isHurt = false;
+        };
+
+
         PlayFightSound();
         HandleAnimations();
     }
@@ -155,6 +182,16 @@ public class Player : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             rigidBody.velocity = new Vector2(actualRunSpeed * -1, rigidBody.velocity.y);
+        }
+
+        // Run
+        if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
         }
     }
 
@@ -220,6 +257,7 @@ public class Player : MonoBehaviour
         animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
         animator.SetBool("IsFighting", isFighting);
+        animator.SetBool("IsHurt", isHurt);
     }
 
     private void PlayFightSound()
@@ -242,6 +280,8 @@ public class Player : MonoBehaviour
         isPlayerHurt = false;
         isFighting = true;
         isMovementEnabled = false;
+        rigidBody.gravityScale = 0f;
+        rigidBody.velocity = Vector2.zero;
     }
 
     public void EndEncounter()
@@ -249,6 +289,8 @@ public class Player : MonoBehaviour
         isPlayerHurt = false;
         isFighting = false;
         isMovementEnabled = true;
+        rigidBody.gravityScale = 1f;
+        DecreaseStaminaAfterBugFight();
     }
 
     public void ThrowUserInTheAirHurt()
@@ -256,5 +298,12 @@ public class Player : MonoBehaviour
         isPlayerHurt = true;
         GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
         isFighting = false;
+        isHurt = true;
+        Hurt();
+    }
+
+    public float GetStaminaDifficultyFactor()
+    {
+        return currentStamina / (startStamina * 1f);
     }
 }

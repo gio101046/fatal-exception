@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Pizza
   - Coffee
+  - Kat Bug
+  - Jack Bug
   layers:
   - Default
   - TransparentFX
@@ -48,4 +50,7 @@ TagManager:
     locked: 0
   - name: Stats
     uniqueID: 4179335367
+    locked: 0
+  - name: Control Buttons
+    uniqueID: 2641203435
     locked: 0

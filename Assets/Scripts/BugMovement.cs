@@ -74,10 +74,12 @@ public class BugMovement : MonoBehaviour
     public void DisableMovement()
     {
         isMovementDisabled = true;
+        rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     public void EnableMovement()
     {
         isMovementDisabled = false;
+        rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
     }
 }
