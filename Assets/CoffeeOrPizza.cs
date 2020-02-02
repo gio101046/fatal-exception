@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coffee : MonoBehaviour
+public class CoffeeOrPizza : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +15,10 @@ public class Coffee : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        collision.gameObject.GetComponent<Player>().OnConsumable(GetComponent<Collider2D>());
     }
 }

@@ -76,18 +76,18 @@ public class Player : MonoBehaviour
 
     }
 
-    void OnCollisionEnter2D(Collision2D coll)
+    public void OnConsumable(Collider2D collision)
     {
-        if (coll.gameObject.tag == "Pizza")
+        if (collision.gameObject.tag == "Pizza")
         {
             SoundManagerScript.PlaySound("eat");
-            Destroy(coll.gameObject);
+            Destroy(collision.gameObject);
             currentHealth += currentHealth < startHealth ? 1 : 0;
             healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
         }
-        else if (coll.gameObject.tag == "Coffee")
+        else if (collision.gameObject.tag == "Coffee")
         {
-            Destroy(coll.gameObject);
+            Destroy(collision.gameObject);
             DrinkCoffee();
         }
     }
