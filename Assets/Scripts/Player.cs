@@ -53,28 +53,6 @@ public class Player : MonoBehaviour
     private void Update()
     { 
         MovePlayer();
-
-        //if (IsPlayerOnWall(true))
-        //{
-        //    if (collider.sharedMaterial == null || collider.sharedMaterial.friction != 0f)
-        //    {
-        //        collider.sharedMaterial = new PhysicsMaterial2D();
-        //        collider.sharedMaterial.friction = 0f;
-        //        collider.enabled = false;
-        //        collider.enabled = true;
-        //    }
-        //}
-        //else
-        //{
-        //    if (collider.sharedMaterial == null || collider.sharedMaterial.friction == 0f)
-        //    {
-        //        collider.sharedMaterial = new PhysicsMaterial2D();
-        //        collider.sharedMaterial.friction = 0.5f;
-        //        collider.enabled = false;
-        //        collider.enabled = true;
-        //    }
-        //}
-
     }
 
     public void OnConsumable(Collider2D collision)
