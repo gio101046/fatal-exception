@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour
         collider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         currentHealth = 1; // startHealth;
-        currentStamina = 50; // startStamina;
+        currentStamina = startStamina;
         healthBar.size = new Vector2(1.5f * startHealth, healthBar.size.y);
         staminaInitialSize = staminaBar.size.x;
         staminaBar.size = new Vector2(staminaInitialSize * 0.5f, staminaBar.size.y);
@@ -74,9 +75,10 @@ public class Player : MonoBehaviour
     {
         if (coll.gameObject.tag == "Pizza")
         {
-            Destroy(coll.gameObject);
-            currentHealth += currentHealth < startHealth ? 1 : 0;
-            healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+            //Destroy(coll.gameObject);
+            //currentHealth += currentHealth < startHealth ? 1 : 0;
+            //healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+            Hurt();
         }
         else if (coll.gameObject.tag == "Coffee")
         {
@@ -103,6 +105,19 @@ public class Player : MonoBehaviour
     private int GetStaminaValueChange(int percentage)
     {
         return currentStamina < startStamina ? (startStamina * percentage / 100) : 0;
+    }
+
+    private void Hurt()
+    {
+        currentHealth -= currentHealth > 0 ? 1 : 0;
+        healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+
+        if (currentHealth <= 0) GameOver();
+    }
+
+    private void GameOver() 
+    {
+        SceneManager.LoadScene("GameOver");
     }
 
 
