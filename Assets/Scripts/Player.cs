@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int coffeValuePercent = 10;
     [SerializeField] private int bugStaminaDamagePercent = 15;
     [SerializeField] private float hurtVelocity = 15f;
+    [SerializeField] private int fightSoundLength = 5;
 
     private int currentHealth;
     private int currentStamina;
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
     private bool isMovementEnabled = true;
     private bool isFighting = false;
     private bool isHurt = false;
-
+    private int fightSoundAccumalator = 0;
     private bool isPlayerHurt = false;
 
     private void Start()
@@ -116,7 +117,6 @@ public class Player : MonoBehaviour
 
     private void Hurt()
     {
-        currentHealth = 3; // TODO: REMOVE!
         currentHealth -= currentHealth > 0 ? 1 : 0;
         healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
 
@@ -142,7 +142,6 @@ public class Player : MonoBehaviour
         {
             isHurt = false;
         };
-
 
         PlayFightSound();
         HandleAnimations();
@@ -264,7 +263,15 @@ public class Player : MonoBehaviour
     {
         if (isFighting && !isPlayerHurt)
         {
-            SoundManagerScript.PlaySound(GetRandomFightClipName());
+            if (fightSoundAccumalator >= fightSoundLength)
+            {
+                SoundManagerScript.PlaySound(GetRandomFightClipName());
+                fightSoundAccumalator = 0;
+            }
+            else 
+            {
+                fightSoundAccumalator++;
+            }
         }
     }
 
@@ -304,6 +311,6 @@ public class Player : MonoBehaviour
 
     public float GetStaminaDifficultyFactor()
     {
-        return currentStamina / (startStamina * 1f);
+        return Mathf.Clamp(currentStamina / (startStamina * 1f), 0.27f, 1);
     }
 }
