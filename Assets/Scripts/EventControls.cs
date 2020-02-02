@@ -13,11 +13,19 @@ public class EventControls : MonoBehaviour
     [SerializeField] private List<Tile> successTiles;
     [SerializeField] private List<Tile> failTiles;
     [SerializeField] private Tile plusTile;
+
     [SerializeField] private float framesPerControlTile = 15;
     [SerializeField] private int nextControlYOffset = 0;
     private int nextControlXOffset => 0 - maxNumberOfControlTiles + 1;
     [SerializeField] private float tileMapClearDelayInSeconds = 0.5f;
-    [SerializeField] private int maxNumberOfControlTiles = 2;
+    private int numberOfEventsCount = 0;
+
+    private int maxNumberOfEvents => currentEnemyCollider.gameObject
+                                                         .GetComponent<BugMovement>()
+                                                         .eventTriggerCount;
+    private int maxNumberOfControlTiles => currentEnemyCollider.gameObject
+                                                               .GetComponent<BugMovement>()
+                                                               .controlTriggerCounterEvent;
 
     private Tilemap tilemap;
 
@@ -33,6 +41,7 @@ public class EventControls : MonoBehaviour
     private int tileMapClearDelayAccumalator = 0;
     private EventControlTile currentEventControl;
     private bool isInBattle = false;
+    private bool hasFailed = false;
 
     private Collider2D currentPlayerCollider;
     private Collider2D currentEnemyCollider;
@@ -46,10 +55,15 @@ public class EventControls : MonoBehaviour
 
     public void TriggerEvent(Collider2D playerCollider, Collider2D enemyCollider, Player player)
     {
+        if (isInBattle)
+            return;
+
         currentPlayerCollider = playerCollider;
         currentEnemyCollider = enemyCollider;
 
         enemyCollider.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        enemyCollider.gameObject.GetComponent<BugMovement>().DisableMovement();
+
         player.StartEncounter();
         Physics2D.IgnoreCollision(playerCollider, enemyCollider, true);
 
@@ -160,10 +174,18 @@ public class EventControls : MonoBehaviour
             currentEventControl = null;
             if (eventControlTilesInCycle.Where(x => !x.isPlusTile && !x.isPerformed).Count() == 0)
             {
+                numberOfEventsCount++;
                 eventTriggered = false;
                 eventCycleAccumalator = 0;
-                // Destroy(currentEnemyCollider.gameObject);
-                // currentEnemyCollider = null;
+
+                if (maxNumberOfControlTiles == numberOfEventsCount)
+                {
+                    player.EndEncounter();
+                    isInBattle = false;
+                    // Destroy(currentEnemyCollider.gameObject);
+                    // currentEnemyCollider = null;
+                    hasFailed = false;
+                }
             }
 
             return;
@@ -174,9 +196,16 @@ public class EventControls : MonoBehaviour
             isInBattle = false;
             eventCycleAccumalator = 0;
             currentEventControl = null;
-            
+            numberOfEventsCount = 0;
+            hasFailed = true;
+
             player.ThrowUserInTheAirHurt();
             SoundManagerScript.PlaySound("bug laugh");
+
+            currentEnemyCollider.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            currentEnemyCollider.gameObject.GetComponent<BugMovement>().EnableMovement();
+            player.EndEncounter();
+
             return;
         }
         else if (FailedToClickCorrect(currentEventControl.keyCode))
@@ -187,8 +216,15 @@ public class EventControls : MonoBehaviour
             isInBattle = false;
             eventCycleAccumalator = 0;
             currentEventControl = null;
+            numberOfEventsCount = 0;
+            hasFailed = true;
 
             player.ThrowUserInTheAirHurt();
+
+            currentEnemyCollider.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            currentEnemyCollider.gameObject.GetComponent<BugMovement>().EnableMovement();
+            player.EndEncounter();
+
             SoundManagerScript.PlaySound("bug laugh");
             return;
         }
@@ -206,16 +242,26 @@ public class EventControls : MonoBehaviour
             eventDrawn = false;
             numberOfControlTilesSet = 0;
 
-            if (currentEnemyCollider != null)
-                Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
-            if (!isInBattle)
+            if (maxNumberOfControlTiles == numberOfEventsCount)
             {
-                currentEnemyCollider.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-                player.EndEncounter();
-            }
+                if (currentEnemyCollider != null && hasFailed)
+                    Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
 
-            currentPlayerCollider = null;
-            currentEnemyCollider = null;
+                numberOfEventsCount = 0;
+                currentPlayerCollider = null;
+                currentEnemyCollider = null;
+            }
+            else
+            {
+                eventTriggered = true && !hasFailed;
+                isInBattle = true && !hasFailed;
+
+                if (hasFailed)
+                {
+                    if (currentEnemyCollider != null)
+                        Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
+                }
+            }
         }
         else
         {
@@ -228,7 +274,7 @@ public class EventControls : MonoBehaviour
     //    var offset = camera.transform.position.x - (int)camera.transform.position.x;
     //    transform.position = new Vector3(transform.position.x + offset, transform.position.y, 0);
     //}
-
+    
     private EventControlTile GenerateEventControlTile(Vector3Int position)
     {
         var randomNumber = Random.Range(0, TileToKeyMappings.TileToKey.Count);

@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
     private bool isMovementEnabled = true;
     private bool isFighting = false;
 
+    private bool isPlayerHurt = false;
+
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -75,6 +77,7 @@ public class Player : MonoBehaviour
         if (coll.gameObject.tag == "Pizza")
         {
             Destroy(coll.gameObject);
+            SoundManagerScript.PlaySound("eat");
             currentHealth += currentHealth < startHealth ? 1 : 0;
             healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
         }
@@ -114,7 +117,7 @@ public class Player : MonoBehaviour
             Run();
             FlipSprite();
         }
-
+        PlayFightSound();
         HandleAnimations();
     }
 
@@ -219,20 +222,39 @@ public class Player : MonoBehaviour
         animator.SetBool("IsFighting", isFighting);
     }
 
+    private void PlayFightSound()
+    {
+        if (isFighting && !isPlayerHurt)
+        {
+            SoundManagerScript.PlaySound(GetRandomFightClipName());
+        }
+    }
+
+    private string GetRandomFightClipName()
+    {
+        var fightClipNames = new List<string> { "punch", "hard punch", "slap", "hard slap" };
+        var randomNumber = UnityEngine.Random.Range(0, fightClipNames.Count);
+        return fightClipNames[randomNumber];
+    }
+
     public void StartEncounter()
     {
+        isPlayerHurt = false;
         isFighting = true;
         isMovementEnabled = false;
     }
 
     public void EndEncounter()
     {
+        isPlayerHurt = false;
         isFighting = false;
         isMovementEnabled = true;
     }
 
     public void ThrowUserInTheAirHurt()
-    {
+    { 
+        isPlayerHurt = true;
         GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
+        isFighting = false;
     }
 }

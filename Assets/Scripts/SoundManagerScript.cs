@@ -5,7 +5,9 @@ using UnityEngine;
 public class SoundManagerScript : MonoBehaviour
 {
 
-    public static AudioClip jumpSound, screamSound, wrongButtonSound, bugLaughSound, drinkSound;
+    public static AudioClip jumpSound, screamSound, wrongButtonSound, 
+        bugLaughSound, drinkSound, eatSound, punchSound, hardPunchSound, 
+        slapSound, hardSlapSound, winSound;
     static AudioSource audioSrc;
 
     // Start is called before the first frame update
@@ -16,6 +18,11 @@ public class SoundManagerScript : MonoBehaviour
         wrongButtonSound = Resources.Load<AudioClip>("Audio/WrongButton");
         bugLaughSound = Resources.Load<AudioClip>("Audio/BugLaugh");
         drinkSound = Resources.Load<AudioClip>("Audio/Drink");
+        eatSound = Resources.Load<AudioClip>("Audio/Eat");
+        punchSound = Resources.Load<AudioClip>("Audio/Punch");
+        hardPunchSound = Resources.Load<AudioClip>("Audio/HardPunch");
+        slapSound = Resources.Load<AudioClip>("Audio/Slap");
+        hardSlapSound = Resources.Load<AudioClip>("Audio/HardSlap");
 
         audioSrc = GetComponent<AudioSource>();
     }
@@ -45,6 +52,25 @@ public class SoundManagerScript : MonoBehaviour
             case "drink":
                 audioSrc.PlayOneShot(drinkSound);
                 break;
+            case "eat":
+                audioSrc.PlayOneShot(eatSound);
+                break;
+            case "punch":
+                audioSrc.PlayOneShot(punchSound);
+                break;
+            case "hard punch":
+                audioSrc.PlayOneShot(hardPunchSound);
+                break;
+            case "slap":
+                audioSrc.PlayOneShot(slapSound);
+                break;
+            case "hard slap":
+                audioSrc.PlayOneShot(hardSlapSound);
+                break;
+            case "win":
+                audioSrc.PlayOneShot(winSound);
+                break;
+
         }
     }
 }
