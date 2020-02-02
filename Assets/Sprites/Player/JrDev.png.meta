@@ -17,6 +17,9 @@ TextureImporter:
   - first:
       213: 111747663661122317
     second: JrDevFall
+  - first:
+      213: -2705122181307999374
+    second: JrDevHurt
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -157,13 +160,13 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 86374016e66a36a40a65436719e0b707
+      spriteID: c8b5882c9de93cd439b08d3aaa871557
       internalID: 7394781096031462559
       vertices: []
       indices: 
@@ -178,13 +181,13 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 578354f911b99a84b886bfb419c60a7b
+      spriteID: 44534712afa629841914c36d6f85cfca
       internalID: -1717341178490256666
       vertices: []
       indices: 
@@ -199,13 +202,13 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cd4a447353767a349a3ef0be23e16d13
+      spriteID: 1ed01d1e16ae5f644b754e0406177073
       internalID: 5052719299223408713
       vertices: []
       indices: 
@@ -220,13 +223,13 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7485496dd79020844a99727b74804931
+      spriteID: f18a4ec784c67e841887089e1518a9a4
       internalID: -8899148160246948828
       vertices: []
       indices: 
@@ -241,14 +244,35 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f2b4486e434dab44b1d305865109c80
+      spriteID: 663795bb62daf804e8de7632fba6f177
       internalID: 111747663661122317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: JrDevHurt
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cebddc5301784741ab9fa524fa3ea50
+      internalID: -2705122181307999374
       vertices: []
       indices: 
       edges: []

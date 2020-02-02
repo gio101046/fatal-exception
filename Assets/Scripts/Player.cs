@@ -13,26 +13,27 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallLineCaseDistance = 0.5f;
     [SerializeField] private float runErrorThreshold = 0.05f;
     [SerializeField] private int startHealth = 3;
-    private int currentHealth;
     [SerializeField] private int startStamina = 100;
     [SerializeField] private int coffeValuePercent = 10;
     [SerializeField] private int bugStaminaDamagePercent = 15;
+    [SerializeField] private float hurtVelocity = 15f;
+
+    private int currentHealth;
     private int currentStamina;
 
     [SerializeField] private SpriteRenderer healthBar;
     [SerializeField] private SpriteRenderer staminaBar;
 
-
-
     private Rigidbody2D rigidBody;
-    new private BoxCollider2D collider;
+    new private Collider2D collider;
     private Animator animator;
     private bool isMovementEnabled = true;
+    private bool isFighting = false;
 
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        collider = GetComponent<BoxCollider2D>();
+        collider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         currentHealth = startHealth;
         currentStamina = startStamina;
@@ -171,10 +172,10 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerOnWall(bool ignoreGround = false)
     {
-        return IsPointOnWall(transform.position + new Vector3(0, collider.bounds.extents.y * 0.6f, 0), ignoreGround) ||
-               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.25f, 0), ignoreGround) ||
+        return IsPointOnWall(transform.position + new Vector3(0, collider.bounds.extents.y * 0.52f, 0), ignoreGround) ||
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.24f, 0), ignoreGround) ||
                IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.8f, 0), ignoreGround) ||
-               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 1.5f, 0), ignoreGround);
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 1.45f, 0), ignoreGround);
     }
 
     private bool IsPointOnWall(Vector2 position, bool ignoreGround = false)
@@ -211,15 +212,23 @@ public class Player : MonoBehaviour
         animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold);
         animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
+        animator.SetBool("IsFighting", isFighting);
     }
 
-    public void DisablePlayerMovement()
+    public void StartEncounter()
     {
+        isFighting = true;
         isMovementEnabled = false;
     }
 
-    public void EnablePlayerMovement()
+    public void EndEncounter()
     {
+        isFighting = false;
         isMovementEnabled = true;
+    }
+
+    public void ThrowUserInTheAirHurt()
+    {
+        GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
     }
 }
