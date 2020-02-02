@@ -311,6 +311,6 @@ public class Player : MonoBehaviour
 
     public float GetStaminaDifficultyFactor()
     {
-        return Mathf.Clamp(currentStamina / (startStamina * 1f), 0.27f, 1);
+        return Mathf.Clamp(currentStamina / (startStamina * 1f), 0.4f, 1);
     }
 }
