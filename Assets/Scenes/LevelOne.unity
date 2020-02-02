@@ -47677,14 +47677,14 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1067504601
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e33008ddf5593464c90eced40f3f28e8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
+  m_DrawMode: 2
   m_Size: {x: 16, y: 16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -47703,8 +47703,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af4fa3c5d20488d4fa39fb11819d3f97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 1337282922}
-  renderer: {fileID: 1727766210}
+  baseCamera: {fileID: 1337282922}
+  baseRenderer: {fileID: 1727766210}
   scrollRate: {x: 0.4, y: 0.4}
 --- !u!1 &1895829829
 GameObject:
