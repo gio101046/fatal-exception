@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class Player : MonoBehaviour
     private bool isMovementEnabled = true;
     private bool isFighting = false;
     private bool isHurt = false;
+
+    private bool isPlayerHurt = false;
 
     private void Start()
     {
@@ -77,9 +80,10 @@ public class Player : MonoBehaviour
     {
         if (coll.gameObject.tag == "Pizza")
         {
-            Destroy(coll.gameObject);
-            currentHealth += currentHealth < startHealth ? 1 : 0;
-            healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+            //Destroy(coll.gameObject);
+            //currentHealth += currentHealth < startHealth ? 1 : 0;
+            //healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+            Hurt();
         }
         else if (coll.gameObject.tag == "Coffee")
         {
@@ -110,6 +114,19 @@ public class Player : MonoBehaviour
         return currentStamina <= startStamina ? (startStamina * percentage / 100) : 0;
     }
 
+    private void Hurt()
+    {
+        currentHealth -= currentHealth > 0 ? 1 : 0;
+        healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+
+        if (currentHealth <= 0) GameOver();
+    }
+
+    private void GameOver() 
+    {
+        SceneManager.LoadScene("GameOver");
+    }
+
 
     private void MovePlayer()
     {
@@ -125,6 +142,8 @@ public class Player : MonoBehaviour
             isHurt = false;
         };
 
+
+        PlayFightSound();
         HandleAnimations();
     }
 
@@ -230,21 +249,39 @@ public class Player : MonoBehaviour
         animator.SetBool("IsHurt", isHurt);
     }
 
+    private void PlayFightSound()
+    {
+        if (isFighting && !isPlayerHurt)
+        {
+            SoundManagerScript.PlaySound(GetRandomFightClipName());
+        }
+    }
+
+    private string GetRandomFightClipName()
+    {
+        var fightClipNames = new List<string> { "punch", "hard punch", "slap", "hard slap" };
+        var randomNumber = UnityEngine.Random.Range(0, fightClipNames.Count);
+        return fightClipNames[randomNumber];
+    }
+
     public void StartEncounter()
     {
+        isPlayerHurt = false;
         isFighting = true;
         isMovementEnabled = false;
     }
 
     public void EndEncounter()
     {
+        isPlayerHurt = false;
         isFighting = false;
         isMovementEnabled = true;
         DecreaseStaminaAfterBugFight();
     }
 
     public void ThrowUserInTheAirHurt()
-    {
+    { 
+        isPlayerHurt = true;
         GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
         isFighting = false;
         isHurt = true;
