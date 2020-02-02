@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float runErrorThreshold = 0.05f;
     [SerializeField] private int startHealth = 3;
     [SerializeField] private int startStamina = 100;
-    [SerializeField] private int coffeValuePercent = 18;
+    [SerializeField] private int coffeValuePercent = 25;
     [SerializeField] private int bugStaminaDamagePercent = 15;
     [SerializeField] private float hurtVelocity = 15f;
     [SerializeField] private int fightSoundLength = 5;
@@ -53,28 +53,6 @@ public class Player : MonoBehaviour
     private void Update()
     { 
         MovePlayer();
-
-        //if (IsPlayerOnWall(true))
-        //{
-        //    if (collider.sharedMaterial == null || collider.sharedMaterial.friction != 0f)
-        //    {
-        //        collider.sharedMaterial = new PhysicsMaterial2D();
-        //        collider.sharedMaterial.friction = 0f;
-        //        collider.enabled = false;
-        //        collider.enabled = true;
-        //    }
-        //}
-        //else
-        //{
-        //    if (collider.sharedMaterial == null || collider.sharedMaterial.friction == 0f)
-        //    {
-        //        collider.sharedMaterial = new PhysicsMaterial2D();
-        //        collider.sharedMaterial.friction = 0.5f;
-        //        collider.enabled = false;
-        //        collider.enabled = true;
-        //    }
-        //}
-
     }
 
     public void OnConsumable(Collider2D collision)
