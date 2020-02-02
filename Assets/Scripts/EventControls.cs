@@ -174,12 +174,14 @@ public class EventControls : MonoBehaviour
             isInBattle = false;
             eventCycleAccumalator = 0;
             currentEventControl = null;
-
+            
             player.ThrowUserInTheAirHurt();
+            SoundManagerScript.PlaySound("bug laugh");
             return;
         }
         else if (FailedToClickCorrect(currentEventControl.keyCode))
         {
+            SoundManagerScript.PlaySound("wrong");
             tilemap.SetTile(currentEventControl.position, currentEventControl.failTile);
             eventTriggered = false;
             isInBattle = false;
@@ -187,6 +189,7 @@ public class EventControls : MonoBehaviour
             currentEventControl = null;
 
             player.ThrowUserInTheAirHurt();
+            SoundManagerScript.PlaySound("bug laugh");
             return;
         }
 
