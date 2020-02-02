@@ -269,6 +269,8 @@ public class Player : MonoBehaviour
         isPlayerHurt = false;
         isFighting = true;
         isMovementEnabled = false;
+        rigidBody.gravityScale = 0f;
+        rigidBody.velocity = Vector2.zero;
     }
 
     public void EndEncounter()
@@ -276,6 +278,7 @@ public class Player : MonoBehaviour
         isPlayerHurt = false;
         isFighting = false;
         isMovementEnabled = true;
+        rigidBody.gravityScale = 1f;
         DecreaseStaminaAfterBugFight();
     }
 
@@ -285,5 +288,6 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
         isFighting = false;
         isHurt = true;
+        Hurt();
     }
 }

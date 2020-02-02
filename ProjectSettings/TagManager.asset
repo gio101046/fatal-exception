@@ -7,6 +7,7 @@ TagManager:
   - Pizza
   - Coffee
   - Kat Bug
+  - Jack Bug
   layers:
   - Default
   - TransparentFX
