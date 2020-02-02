@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
 
     private int currentHealth;
     private int currentStamina;
+    private float staminaInitialSize;
 
     [SerializeField] private SpriteRenderer healthBar;
     [SerializeField] private SpriteRenderer staminaBar;
@@ -37,10 +38,11 @@ public class Player : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
-        currentHealth = startHealth;
-        currentStamina = startStamina;
+        currentHealth = 1; // startHealth;
+        currentStamina = 50; // startStamina;
         healthBar.size = new Vector2(1.5f * startHealth, healthBar.size.y);
-        staminaBar.size = new Vector2(staminaBar.size.x, staminaBar.size.y);
+        staminaInitialSize = staminaBar.size.x;
+        staminaBar.size = new Vector2(staminaInitialSize * 0.5f, staminaBar.size.y);
     }
 
     private void Update()
@@ -91,7 +93,8 @@ public class Player : MonoBehaviour
         SoundManagerScript.PlaySound("drink");
         int result = currentStamina + GetStaminaValueChange(coffeValuePercent);
         currentStamina = result < startStamina ? result : startStamina;
-        staminaBar.size = new Vector2(staminaBar.size.x * (currentStamina/startStamina), staminaBar.size.y);
+        float multiplier = currentStamina * 1f / startStamina;
+        staminaBar.size = new Vector2(staminaInitialSize * multiplier, staminaBar.size.y);
     }
 
     private void DecreaseStaminaAfterBugFight()
@@ -252,5 +255,6 @@ public class Player : MonoBehaviour
     { 
         isPlayerHurt = true;
         GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
+        isFighting = false;
     }
 }
