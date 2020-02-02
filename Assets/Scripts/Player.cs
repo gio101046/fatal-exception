@@ -231,5 +231,6 @@ public class Player : MonoBehaviour
     public void ThrowUserInTheAirHurt()
     {
         GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
+        isFighting = false;
     }
 }
