@@ -36,43 +36,46 @@ public class SoundManagerScript : MonoBehaviour
 
     public static void PlaySound(string clip)
     {
+        AudioClip sound = null;
         switch (clip)
         {
             case "jump":
-                audioSrc.PlayOneShot(jumpSound);
+                sound = jumpSound;                
                 break;
             case "scream":
-                audioSrc.PlayOneShot(screamSound);
+                sound = screamSound;
                 break;
             case "wrong":
-                audioSrc.PlayOneShot(wrongButtonSound);
+                sound = wrongButtonSound;
                 break;
             case "bug laugh":
-                audioSrc.PlayOneShot(bugLaughSound);
+                sound = bugLaughSound;
                 break;
             case "drink":
-                audioSrc.PlayOneShot(drinkSound);
+                sound = drinkSound;
                 break;
             case "eat":
-                audioSrc.PlayOneShot(eatSound);
+                sound = eatSound;
                 break;
             case "punch":
-                audioSrc.PlayOneShot(punchSound);
+                sound = punchSound;
                 break;
             case "hard punch":
-                audioSrc.PlayOneShot(hardPunchSound);
+                sound = hardPunchSound;
                 break;
             case "slap":
-                audioSrc.PlayOneShot(slapSound);
+                sound = slapSound;
                 break;
             case "hard slap":
-                audioSrc.PlayOneShot(hardSlapSound);
+                sound = hardSlapSound;
                 break;
             case "win":
-                audioSrc.clip = winSound;
-                audioSrc.PlayOneShot(winSound);
+                sound = winSound;
                 break;
 
         }
+
+        audioSrc.clip = sound;
+        audioSrc.PlayOneShot(sound);
     }
 }
