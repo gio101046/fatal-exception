@@ -165,16 +165,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555a3f8aa89a0e84fb6c43249a117f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1671840921}
   camera: {fileID: 1337282922}
-  tile: {fileID: 0}
-  tiles: []
-  successTiles: []
-  successTile: {fileID: 0}
-  plusTile: {fileID: 0}
+  tiles:
+  - {fileID: 11400000, guid: 1f7bfa5ee72002646806268d14bfeb3b, type: 2}
+  - {fileID: 11400000, guid: e85f8319cdf4358448a9002845cfbd5a, type: 2}
+  - {fileID: 11400000, guid: daea938cbd864e0479f663f746bb9950, type: 2}
+  - {fileID: 11400000, guid: bfe2d3906a2ea9a459088706930d84a6, type: 2}
+  - {fileID: 11400000, guid: eb62aa8f449e99a499ed3a9dde109158, type: 2}
+  - {fileID: 11400000, guid: 3892d3fd4f09d3546a9c0fa91c23804c, type: 2}
+  successTiles:
+  - {fileID: 11400000, guid: c2678bd928e9a0943ad5fadb602db819, type: 2}
+  - {fileID: 11400000, guid: db1d65b4da209fa489ba3d7582dbff24, type: 2}
+  - {fileID: 11400000, guid: 4c5438b1315e8d840b6c482e9710993c, type: 2}
+  - {fileID: 11400000, guid: 31952a6eac335264bbb33d2823f28683, type: 2}
+  - {fileID: 11400000, guid: fe934cd7480abb34d85c270a61159910, type: 2}
+  - {fileID: 11400000, guid: 5eea178b37799c04484c1d11a68c148c, type: 2}
+  plusTile: {fileID: 11400000, guid: ee14e10b7ac07bd449e0f1d5ea99eb42, type: 2}
   framesPerControlTile: 15
   nextControlYOffset: 2
-  nextControlXOffset: -1
   tileMapClearDelayInSeconds: 0.5
+  maxNumberOfControlTiles: 2
 --- !u!483693784 &1491656
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -2431,8 +2442,9 @@ MonoBehaviour:
   runSpeed: 10
   jumpSpeed: 35
   runFasterFactor: 1.5
-  groundErrorThreshold: 3
-  wallLineCaseDistance: 1.15
+  groundErrorThreshold: 1.5
+  wallErrorThreshold: 1.6
+  wallLineCaseDistance: 0
   runErrorThreshold: 0.05
   startHealth: 3
   startStamina: 100
@@ -2718,28 +2730,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555a3f8aa89a0e84fb6c43249a117f93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 1337282922}
-  tile: {fileID: 0}
-  tiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  successTiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  successTile: {fileID: 0}
+  player: {fileID: 0}
+  camera: {fileID: 0}
+  tiles: []
+  successTiles: []
   plusTile: {fileID: 0}
   framesPerControlTile: 15
-  nextControlYOffset: 1
-  nextControlXOffset: -1
+  nextControlYOffset: 0
   tileMapClearDelayInSeconds: 0.5
+  maxNumberOfControlTiles: 2
 --- !u!483693784 &1759518266
 TilemapRenderer:
   m_ObjectHideFlags: 0

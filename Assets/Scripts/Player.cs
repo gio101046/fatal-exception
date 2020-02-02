@@ -6,9 +6,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float runSpeed = 10f;
-    [SerializeField] private float jumpSpeed = 10f;
+    [SerializeField] private float jumpSpeed = 35f;
     [SerializeField] private float runFasterFactor = 1.5f;
-    [SerializeField] private float groundErrorThreshold = 0.05f;
+    [SerializeField] private float groundErrorThreshold = 1.5f;
+    [SerializeField] private float wallErrorThreshold = 1.5f;
     [SerializeField] private float wallLineCaseDistance = 0.5f;
     [SerializeField] private float runErrorThreshold = 0.05f;
     [SerializeField] private int startHealth = 3;
@@ -22,11 +23,11 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer staminaBar;
 
 
+
     private Rigidbody2D rigidBody;
     new private BoxCollider2D collider;
     private Animator animator;
-
-    private Vector2 wallLineCaseDistanceVector => new Vector2(wallLineCaseDistance, 0);
+    private bool isMovementEnabled = true;
 
     private void Start()
     {
@@ -42,6 +43,28 @@ public class Player : MonoBehaviour
     private void Update()
     { 
         MovePlayer();
+
+        //if (IsPlayerOnWall(true))
+        //{
+        //    if (collider.sharedMaterial == null || collider.sharedMaterial.friction != 0f)
+        //    {
+        //        collider.sharedMaterial = new PhysicsMaterial2D();
+        //        collider.sharedMaterial.friction = 0f;
+        //        collider.enabled = false;
+        //        collider.enabled = true;
+        //    }
+        //}
+        //else
+        //{
+        //    if (collider.sharedMaterial == null || collider.sharedMaterial.friction == 0f)
+        //    {
+        //        collider.sharedMaterial = new PhysicsMaterial2D();
+        //        collider.sharedMaterial.friction = 0.5f;
+        //        collider.enabled = false;
+        //        collider.enabled = true;
+        //    }
+        //}
+
     }
 
     void OnCollisionEnter2D(Collision2D coll)
@@ -80,9 +103,13 @@ public class Player : MonoBehaviour
 
     private void MovePlayer()
     {
-        Jump();
-        Run();
-        FlipSprite();
+        if (isMovementEnabled)
+        {
+            Jump();
+            Run();
+            FlipSprite();
+        }
+
         HandleAnimations();
     }
 
@@ -100,15 +127,16 @@ public class Player : MonoBehaviour
 
     private void Run()
     {
-        if (IsPlayerOnWall())
-            return;
-
         var actualRunSpeed = runSpeed;
 
         // Speed Run Increase
         if (Input.GetKey(KeyCode.W))
         {
             actualRunSpeed *= runFasterFactor;
+        }
+        if (IsPlayerOnWall())
+        {
+            actualRunSpeed = 0;
         }
 
         // Run
@@ -124,38 +152,45 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerOnGround()
     {
-        return IsPointOnGround(transform.position + new Vector3(0.3f, 0, 0)) ||
-               IsPointOnGround(transform.position + new Vector3(-0.3f, 0, 0));
+        return IsPointOnGround(transform.position + new Vector3(collider.bounds.extents.x * 0.96f, 0, 0)) ||
+               IsPointOnGround(transform.position) ||
+               IsPointOnGround(transform.position - new Vector3(collider.bounds.extents.x * 0.99f, 0, 0));
     }
 
     private bool IsPointOnGround(Vector2 position)
     {
+        Debug.DrawLine(position, position - new Vector2(0, collider.bounds.extents.y * groundErrorThreshold));
+
         RaycastHit2D hit = Physics2D.Raycast(position,
                                              -Vector2.up,
-                                             groundErrorThreshold,
+                                             collider.bounds.extents.y * groundErrorThreshold,
                                              LayerMask.GetMask(LayerNames.Ground));
 
         return hit.collider != null && hit.collider.IsTouching(collider);
     }
 
-    private bool IsPlayerOnWall()
+    private bool IsPlayerOnWall(bool ignoreGround = false)
     {
-        return IsPointOnWall(transform.position + new Vector3(0, 1, 0)) ||
-               IsPointOnWall(transform.position + new Vector3(0, -1, 0)) ||
-               IsPointOnWall(transform.position + new Vector3(0, -2, 0));
+        return IsPointOnWall(transform.position + new Vector3(0, collider.bounds.extents.y * 0.6f, 0), ignoreGround) ||
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.25f, 0), ignoreGround) ||
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.8f, 0), ignoreGround) ||
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 1.5f, 0), ignoreGround);
     }
 
-    private bool IsPointOnWall(Vector2 position)
+    private bool IsPointOnWall(Vector2 position, bool ignoreGround = false)
     {
+        Debug.DrawLine(position, position + new Vector2(collider.bounds.extents.x * wallErrorThreshold, 0), Color.green);
+        Debug.DrawLine(position, position - new Vector2(collider.bounds.extents.x * wallErrorThreshold, 0), Color.green);
+
         var rightHit = Physics2D.Linecast(position,
-                                          position + wallLineCaseDistanceVector,
+                                          position + new Vector2(collider.bounds.extents.x * wallErrorThreshold, 0),
                                           LayerMask.GetMask(LayerNames.Ground));
         var leftHit = Physics2D.Linecast(position,
-                                         position - wallLineCaseDistanceVector,
+                                         position - new Vector2(collider.bounds.extents.x * wallErrorThreshold, 0),
                                          LayerMask.GetMask(LayerNames.Ground));
 
         return ((rightHit.collider != null && rightHit.collider.IsTouching(collider)) ||
-               (leftHit.collider != null && leftHit.collider.IsTouching(collider))) && !IsPlayerOnGround();
+               (leftHit.collider != null && leftHit.collider.IsTouching(collider))) && (!IsPlayerOnGround() || ignoreGround);
     }
 
     private bool HasEncounteredEnemy()
@@ -176,5 +211,15 @@ public class Player : MonoBehaviour
         animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold);
         animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
+    }
+
+    public void DisablePlayerMovement()
+    {
+        isMovementEnabled = false;
+    }
+
+    public void EnablePlayerMovement()
+    {
+        isMovementEnabled = true;
     }
 }
