@@ -7,22 +7,21 @@ using UnityEngine.Tilemaps;
 
 public class EventControls : MonoBehaviour
 {
+    [SerializeField] private Player player;
     [SerializeField] private Camera camera;
-    [SerializeField] private Tile tile;
     [SerializeField] private List<Tile> tiles;
     [SerializeField] private List<Tile> successTiles;
-    [SerializeField] private Tile successTile;
     [SerializeField] private Tile plusTile;
     [SerializeField] private float framesPerControlTile = 15;
     [SerializeField] private int nextControlYOffset = 0;
-    [SerializeField] private int nextControlXOffset = 0;
+    private int nextControlXOffset => 0 - maxNumberOfControlTiles + 1;
     [SerializeField] private float tileMapClearDelayInSeconds = 0.5f;
+    [SerializeField] private int maxNumberOfControlTiles = 2;
 
     private Tilemap tilemap;
 
     /* For drawing event control tiles */
     private Vector3Int? initialCameraPosition;
-    private int maxNumberOfControlTiles = 3;
     private int numberOfControlTilesSet = 0;
     private int nextControlAccumalator = 0;
 
@@ -47,6 +46,8 @@ public class EventControls : MonoBehaviour
     {
         currentPlayerCollider = playerCollider;
         currentEnemyCollider = enemyCollider;
+
+        player.DisablePlayerMovement();
         Physics2D.IgnoreCollision(playerCollider, enemyCollider, true);
 
         eventTriggered = true;
@@ -54,7 +55,6 @@ public class EventControls : MonoBehaviour
 
     public bool IsEventTriggered()
     {
-
         return eventTriggered;
     }
 
@@ -69,7 +69,7 @@ public class EventControls : MonoBehaviour
         if (eventTriggered)
         {
             SetTile();
-            //SetTileMapPosition();
+            // SetTileMapPosition();
         }
 
         if (eventDrawn && eventTriggered)
@@ -94,19 +94,13 @@ public class EventControls : MonoBehaviour
             EventControlTile eventControlTile = null;
             if (isControlTile == null || isControlTile.GetValueOrDefault())
             {
-                eventControlTile = new EventControlTile(KeyCode.Q,
-                                                        tile,
-                                                        successTile,
-                                                        GetNextTilePosition() + nextControlOffSetAsVector); /* TODO: Hard code */
+                eventControlTile = GenerateEventControlTile(GetNextTilePosition() + nextControlOffSetAsVector);
                 isControlTile = false;
+                numberOfControlTilesSet++;
             }
             else
             {
-                eventControlTile = new EventControlTile(KeyCode.Escape,
-                                                        plusTile,
-                                                        null,
-                                                        GetNextTilePosition() + nextControlOffSetAsVector,
-                                                        true); /* TODO: Hard code */
+                eventControlTile = GenerateEventControlPlusTile(GetNextPlusTilePosition() + nextControlOffSetAsVector);
                 isControlTile = true;
             }
 
@@ -115,7 +109,6 @@ public class EventControls : MonoBehaviour
             tilemap.SetTile(eventControlTile.position, eventControlTile.tile);
 
             nextControlAccumalator = 0;
-            numberOfControlTilesSet++;
         }
         else if (numberOfControlTilesSet == maxNumberOfControlTiles)
         {
@@ -138,11 +131,17 @@ public class EventControls : MonoBehaviour
 
     private Vector3Int GetNextTilePosition()
     {
-        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet, 0, 0))
+        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet*2, 0, 0))
                .GetValueOrDefault();
     }
 
-    private void PerformControlEvent()
+    private Vector3Int GetNextPlusTilePosition()
+    {
+        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet*2-1, 0, 0))
+               .GetValueOrDefault();
+    }
+
+    private bool PerformControlEvent()
     {
         nextControlAccumalator = 0;
 
@@ -163,24 +162,33 @@ public class EventControls : MonoBehaviour
         }
         else if (eventCycleAccumalator >= eventCycleInSeconds * framesPerSecond)
         {
-
+            eventTriggered = false;
+            eventCycleAccumalator = 0;
+            Destroy(currentEnemyCollider.gameObject);
+            currentEnemyCollider = null;
         }
         else
         {
             eventCycleAccumalator++;
         }
+
+        return false;
     }
 
     private void Reset()
     {
         if (tileMapClearDelayAccumalator >= tileMapClearDelayInSeconds * framesPerSecond)
         {
+            eventControlTilesInCycle.Clear();
             tilemap.ClearAllTiles();
             tileMapClearDelayAccumalator = 0;
             eventDrawn = false;
             numberOfControlTilesSet = 0;
 
-            Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
+            if (currentEnemyCollider != null)
+                Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
+            player.EnablePlayerMovement();
+
             currentPlayerCollider = null;
             currentEnemyCollider = null;
         }
@@ -190,9 +198,28 @@ public class EventControls : MonoBehaviour
         }
     }
 
-    private void SetTileMapPosition()
+    //private void SetTileMapPosition()
+    //{
+    //    var offset = camera.transform.position.x - (int)camera.transform.position.x;
+    //    transform.position = new Vector3(transform.position.x + offset, transform.position.y, 0);
+    //}
+
+    private EventControlTile GenerateEventControlTile(Vector3Int position)
     {
-        transform.position = camera.transform.position + 
-                             new Vector3Int(nextControlXOffset, nextControlYOffset, 0); // offset
+        var randomNumber = Random.Range(0, TileToKeyMappings.TileToKey.Count);
+
+        return new EventControlTile(TileToKeyMappings.TileToKey[randomNumber],
+                                    tiles[randomNumber],
+                                    successTiles[randomNumber],
+                                    position);
+    }
+
+    private EventControlTile GenerateEventControlPlusTile(Vector3Int position)
+    {
+        return new EventControlTile(KeyCode.Escape,
+                                    plusTile,
+                                    null,
+                                    position,
+                                    true);
     }
 }
