@@ -178,7 +178,7 @@ public class EventControls : MonoBehaviour
                 eventTriggered = false;
                 eventCycleAccumalator = 0;
 
-                if (maxNumberOfControlTiles == numberOfEventsCount)
+                if (maxNumberOfEvents == numberOfEventsCount)
                 {
                     player.EndEncounter();
                     isInBattle = false;
@@ -242,7 +242,7 @@ public class EventControls : MonoBehaviour
             eventDrawn = false;
             numberOfControlTilesSet = 0;
 
-            if (maxNumberOfControlTiles == numberOfEventsCount)
+            if (maxNumberOfEvents == numberOfEventsCount)
             {
                 if (currentEnemyCollider != null && hasFailed)
                     Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
