@@ -5,15 +5,16 @@ using UnityEngine;
 public class SoundManagerScript : MonoBehaviour
 {
 
-    public static AudioClip jumpSound, screamSound, wrongButtonSound;
+    public static AudioClip jumpSound, screamSound, wrongButtonSound, bugLaughSound;
     static AudioSource audioSrc;
 
     // Start is called before the first frame update
     void Start()
     {
         jumpSound = Resources.Load<AudioClip>("Audio/Jump");
-        jumpSound = Resources.Load<AudioClip>("Audio/GirlyScream");
-        jumpSound = Resources.Load<AudioClip>("Audio/WrongButton");
+        screamSound = Resources.Load<AudioClip>("Audio/GirlyScream");
+        wrongButtonSound = Resources.Load<AudioClip>("Audio/WrongButton");
+        bugLaughSound = Resources.Load<AudioClip>("Audio/BugLaugh");
 
         audioSrc = GetComponent<AudioSource>();
     }
@@ -36,6 +37,9 @@ public class SoundManagerScript : MonoBehaviour
                 break;
             case "wrong":
                 audioSrc.PlayOneShot(wrongButtonSound);
+                break;
+            case "bug laugh":
+                audioSrc.PlayOneShot(bugLaughSound);
                 break;
         }
     }
