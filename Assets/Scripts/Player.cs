@@ -13,10 +13,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallLineCaseDistance = 0.5f;
     [SerializeField] private float runErrorThreshold = 0.05f;
     [SerializeField] private int startHealth = 3;
-    private int currentHealth;
     [SerializeField] private int startStamina = 100;
     [SerializeField] private int coffeValuePercent = 10;
     [SerializeField] private int bugStaminaDamagePercent = 15;
+    [SerializeField] private float hurtVelocity = 15f;
+
+    private int currentHealth;
     private int currentStamina;
 
     [SerializeField] private SpriteRenderer healthBar;
@@ -221,5 +223,10 @@ public class Player : MonoBehaviour
     public void EnablePlayerMovement()
     {
         isMovementEnabled = true;
+    }
+
+    public void ThrowUserInTheAirHurt()
+    {
+        GetComponent<Rigidbody2D>().velocity += new Vector2(Mathf.Sign(transform.localScale.x) * -1 * hurtVelocity, hurtVelocity);
     }
 }

@@ -7,10 +7,11 @@ using UnityEngine.Tilemaps;
 
 public class EventControls : MonoBehaviour
 {
-    [SerializeField] private Player player; 
+    [SerializeField] private Player player;
     [SerializeField] private Camera camera;
     [SerializeField] private List<Tile> tiles;
     [SerializeField] private List<Tile> successTiles;
+    [SerializeField] private List<Tile> failTiles;
     [SerializeField] private Tile plusTile;
     [SerializeField] private float framesPerControlTile = 15;
     [SerializeField] private int nextControlYOffset = 0;
@@ -31,6 +32,7 @@ public class EventControls : MonoBehaviour
     private int eventCycleAccumalator = 0;
     private int tileMapClearDelayAccumalator = 0;
     private EventControlTile currentEventControl;
+    private bool isInBattle = false;
 
     private Collider2D currentPlayerCollider;
     private Collider2D currentEnemyCollider;
@@ -42,7 +44,7 @@ public class EventControls : MonoBehaviour
     private int framesPerSecond => 60;
     private Vector3Int nextControlOffSetAsVector => new Vector3Int(nextControlXOffset, nextControlYOffset, 0);
 
-    public void TriggerEvent(Collider2D playerCollider, Collider2D enemyCollider)
+    public void TriggerEvent(Collider2D playerCollider, Collider2D enemyCollider, Player player)
     {
         currentPlayerCollider = playerCollider;
         currentEnemyCollider = enemyCollider;
@@ -51,6 +53,7 @@ public class EventControls : MonoBehaviour
         Physics2D.IgnoreCollision(playerCollider, enemyCollider, true);
 
         eventTriggered = true;
+        isInBattle = true;
     }
 
     public bool IsEventTriggered()
@@ -59,7 +62,7 @@ public class EventControls : MonoBehaviour
     }
 
     private void Start()
-    { 
+    {
         tilemap = GetComponent<Tilemap>();
         eventControlTilesInCycle = new List<EventControlTile>();
     }
@@ -76,7 +79,7 @@ public class EventControls : MonoBehaviour
         {
             PerformControlEvent();
         }
-        
+
         if (eventDrawn && !eventTriggered)
         {
             Reset();
@@ -124,24 +127,24 @@ public class EventControls : MonoBehaviour
 
     private Vector3Int GetCameraPosition()
     {
-        return new Vector3Int((int)camera.transform.position.x, 
-                              (int)camera.transform.position.y, 
+        return new Vector3Int((int)camera.transform.position.x,
+                              (int)camera.transform.position.y,
                               (int)camera.transform.position.z);
     }
 
     private Vector3Int GetNextTilePosition()
     {
-        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet*2, 0, 0))
+        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet * 2, 0, 0))
                .GetValueOrDefault();
     }
 
     private Vector3Int GetNextPlusTilePosition()
     {
-        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet*2-1, 0, 0))
+        return (initialCameraPosition + new Vector3Int(numberOfControlTilesSet * 2 - 1, 0, 0))
                .GetValueOrDefault();
     }
 
-    private bool PerformControlEvent()
+    private void PerformControlEvent()
     {
         nextControlAccumalator = 0;
 
@@ -158,21 +161,35 @@ public class EventControls : MonoBehaviour
             {
                 eventTriggered = false;
                 eventCycleAccumalator = 0;
+                // Destroy(currentEnemyCollider.gameObject);
+                // currentEnemyCollider = null;
             }
+
+            return;
         }
         else if (eventCycleAccumalator >= eventCycleInSeconds * framesPerSecond)
         {
             eventTriggered = false;
+            isInBattle = false;
             eventCycleAccumalator = 0;
-            Destroy(currentEnemyCollider.gameObject);
-            currentEnemyCollider = null;
+            currentEventControl = null;
+
+            player.ThrowUserInTheAirHurt();
+            return;
         }
-        else
+        else if (FailedToClickCorrect(currentEventControl.keyCode))
         {
-            eventCycleAccumalator++;
+            tilemap.SetTile(currentEventControl.position, currentEventControl.failTile);
+            eventTriggered = false;
+            isInBattle = false;
+            eventCycleAccumalator = 0;
+            currentEventControl = null;
+
+            player.ThrowUserInTheAirHurt();
+            return;
         }
 
-        return false;
+        eventCycleAccumalator++;
     }
 
     private void Reset()
@@ -187,7 +204,8 @@ public class EventControls : MonoBehaviour
 
             if (currentEnemyCollider != null)
                 Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
-            player.EnablePlayerMovement();
+            if (!isInBattle)
+                player.EnablePlayerMovement();
 
             currentPlayerCollider = null;
             currentEnemyCollider = null;
@@ -211,6 +229,7 @@ public class EventControls : MonoBehaviour
         return new EventControlTile(TileToKeyMappings.TileToKey[randomNumber],
                                     tiles[randomNumber],
                                     successTiles[randomNumber],
+                                    failTiles[randomNumber],
                                     position);
     }
 
@@ -219,7 +238,15 @@ public class EventControls : MonoBehaviour
         return new EventControlTile(KeyCode.Escape,
                                     plusTile,
                                     null,
+                                    null,
                                     position,
                                     true);
+    }
+
+    private bool FailedToClickCorrect(KeyCode correctKey)
+    {
+        var allKeysButCorrect = TileToKeyMappings.TileToKey.Where(x => x != correctKey);
+
+        return allKeysButCorrect.Any(x => Input.GetKeyDown(x));
     }
 }
