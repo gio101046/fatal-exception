@@ -228,7 +228,7 @@ public class EventControls : MonoBehaviour
     //    var offset = camera.transform.position.x - (int)camera.transform.position.x;
     //    transform.position = new Vector3(transform.position.x + offset, transform.position.y, 0);
     //}
-
+    
     private EventControlTile GenerateEventControlTile(Vector3Int position)
     {
         var randomNumber = Random.Range(0, TileToKeyMappings.TileToKey.Count);
