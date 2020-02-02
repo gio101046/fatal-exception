@@ -11,6 +11,7 @@ public class EventControls : MonoBehaviour
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject music;
     [SerializeField] private List<Tile> tiles;
+    [SerializeField] private List<Tile> pressedTiles;
     [SerializeField] private List<Tile> successTiles;
     [SerializeField] private List<Tile> failTiles;
     [SerializeField] private Tile plusTile;
@@ -43,6 +44,7 @@ public class EventControls : MonoBehaviour
     private EventControlTile currentEventControl;
     private bool isInBattle = false;
     private bool hasFailed = false;
+    private int buttonPressAnimationAccumalator = 0;
 
     private Collider2D currentPlayerCollider;
     private Collider2D currentEnemyCollider;
@@ -177,6 +179,18 @@ public class EventControls : MonoBehaviour
 
         if (currentEventControl == null)
             currentEventControl = eventControlTilesInCycle.First(x => !x.isPlusTile && !x.isPerformed);
+        else
+        {
+            if (buttonPressAnimationAccumalator >= framesPerControlTile)
+            {
+                tilemap.SetTile(currentEventControl.position, currentEventControl.isPressed ? currentEventControl.pressedTile :
+                                                                              currentEventControl.tile);
+                currentEventControl.isPressed = !currentEventControl.isPressed;
+                buttonPressAnimationAccumalator = 0;
+            }
+            else
+                buttonPressAnimationAccumalator++;
+        }
 
         if (Input.GetKeyDown(currentEventControl.keyCode))
         {
@@ -203,7 +217,7 @@ public class EventControls : MonoBehaviour
 
             return;
         }
-        else if (eventCycleAccumalator >= eventCycleInSeconds * framesPerSecond)
+        else if (eventCycleAccumalator >= eventCycleInSeconds * framesPerSecond * player.GetStaminaDifficultyFactor())
         {
             eventTriggered = false;
             isInBattle = false;
@@ -294,6 +308,7 @@ public class EventControls : MonoBehaviour
 
         return new EventControlTile(TileToKeyMappings.TileToKey[randomNumber],
                                     tiles[randomNumber],
+                                    pressedTiles[randomNumber],
                                     successTiles[randomNumber],
                                     failTiles[randomNumber],
                                     position);
@@ -303,6 +318,7 @@ public class EventControls : MonoBehaviour
     {
         return new EventControlTile(KeyCode.Escape,
                                     plusTile,
+                                    null,
                                     null,
                                     null,
                                     position,
