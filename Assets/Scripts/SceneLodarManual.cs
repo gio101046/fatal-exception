@@ -16,6 +16,6 @@ public class SceneLodarManual : MonoBehaviour
 
     void LoadScene()
     {
-        SceneManager.LoadScene("LevelOne");
+        SceneManager.LoadScene("GameIntro");
     }
 }
