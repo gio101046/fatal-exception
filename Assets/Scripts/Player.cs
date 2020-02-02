@@ -80,10 +80,9 @@ public class Player : MonoBehaviour
     {
         if (coll.gameObject.tag == "Pizza")
         {
-            //Destroy(coll.gameObject);
-            //currentHealth += currentHealth < startHealth ? 1 : 0;
-            //healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
-            Hurt();
+            Destroy(coll.gameObject);
+            currentHealth += currentHealth < startHealth ? 1 : 0;
+            healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
         }
         else if (coll.gameObject.tag == "Coffee")
         {
