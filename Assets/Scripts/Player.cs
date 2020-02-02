@@ -11,6 +11,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundErrorThreshold = 0.05f;
     [SerializeField] private float wallLineCaseDistance = 0.5f;
     [SerializeField] private float runErrorThreshold = 0.05f;
+    [SerializeField] private int startHealth = 3;
+    private int currentHealth;
+    [SerializeField] private int startStamina = 100;
+    [SerializeField] private int coffeValuePercent = 10;
+    [SerializeField] private int bugStaminaDamagePercent = 15;
+    private int currentStamina;
+
+    [SerializeField] private SpriteRenderer healthBar;
+    [SerializeField] private SpriteRenderer staminaBar;
+
 
     private Rigidbody2D rigidBody;
     new private BoxCollider2D collider;
@@ -23,12 +33,50 @@ public class Player : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
+        currentHealth = startHealth;
+        currentStamina = startStamina;
+        healthBar.size = new Vector2(1.5f * startHealth, healthBar.size.y);
+        staminaBar.size = new Vector2(staminaBar.size.x, staminaBar.size.y);
     }
 
     private void Update()
-    {
+    { 
         MovePlayer();
     }
+
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "Pizza")
+        {
+            Destroy(coll.gameObject);
+            currentHealth += currentHealth < startHealth ? 1 : 0;
+            healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
+        }
+        else if (coll.gameObject.tag == "Coffee")
+        {
+            Destroy(coll.gameObject);
+            DrinkCoffee();
+        }
+    }
+
+    private void DrinkCoffee()
+    {
+        int result = currentStamina + GetStaminaValueChange(coffeValuePercent);
+        currentStamina = result < startStamina ? result : startStamina;
+        staminaBar.size = new Vector2(staminaBar.size.x * (currentStamina/startStamina), staminaBar.size.y);
+    }
+
+    private void DecreaseStaminaAfterBugFight()
+    {
+        int result = currentStamina - GetStaminaValueChange(bugStaminaDamagePercent);
+        currentStamina = result < 0 ? 0 : result;
+    }
+
+    private int GetStaminaValueChange(int percentage)
+    {
+        return currentStamina < startStamina ? (startStamina * percentage / 100) : 0;
+    }
+
 
     private void MovePlayer()
     {
