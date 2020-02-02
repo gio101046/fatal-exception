@@ -115,6 +115,7 @@ public class Player : MonoBehaviour
 
     private void Hurt()
     {
+        currentHealth = 3; // TODO: REMOVE!
         currentHealth -= currentHealth > 0 ? 1 : 0;
         healthBar.size = new Vector2(1.5f * currentHealth, this.healthBar.size.y);
 
@@ -180,6 +181,16 @@ public class Player : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             rigidBody.velocity = new Vector2(actualRunSpeed * -1, rigidBody.velocity.y);
+        }
+
+        // Run
+        if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
         }
     }
 
@@ -288,5 +299,10 @@ public class Player : MonoBehaviour
         isFighting = false;
         isHurt = true;
         Hurt();
+    }
+
+    public float GetStaminaDifficultyFactor()
+    {
+        return currentStamina / (startStamina * 1f);
     }
 }
