@@ -189,7 +189,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aa0847f2d07a5de409fea20d9eef8f98, type: 2}
   - {fileID: 11400000, guid: 4a575a19b6cd8a140959a1461963418f, type: 2}
   plusTile: {fileID: 11400000, guid: ee14e10b7ac07bd449e0f1d5ea99eb42, type: 2}
-  framesPerControlTile: 15
+  framesPerControlTile: 8
   nextControlYOffset: 2
   tileMapClearDelayInSeconds: 0.5
   maxNumberOfControlTiles: 2
@@ -93340,7 +93340,7 @@ PrefabInstance:
     - target: {fileID: 3827363133515929335, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a,
         type: 3}
       propertyPath: movementSpeed
-      value: 2
+      value: 2.2
       objectReference: {fileID: 0}
     - target: {fileID: 3827363133515929335, guid: ef13d4cb4d0a2b043b4f2a6cc75ca48a,
         type: 3}

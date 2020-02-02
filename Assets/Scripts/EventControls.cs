@@ -49,7 +49,7 @@ public class EventControls : MonoBehaviour
         currentPlayerCollider = playerCollider;
         currentEnemyCollider = enemyCollider;
 
-        player.DisablePlayerMovement();
+        player.StartEncounter();
         Physics2D.IgnoreCollision(playerCollider, enemyCollider, true);
 
         eventTriggered = true;
@@ -205,7 +205,7 @@ public class EventControls : MonoBehaviour
             if (currentEnemyCollider != null)
                 Physics2D.IgnoreCollision(currentPlayerCollider, currentEnemyCollider, false);
             if (!isInBattle)
-                player.EnablePlayerMovement();
+                player.EndEncounter();
 
             currentPlayerCollider = null;
             currentEnemyCollider = null;

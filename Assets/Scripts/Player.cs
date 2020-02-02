@@ -24,12 +24,11 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer healthBar;
     [SerializeField] private SpriteRenderer staminaBar;
 
-
-
     private Rigidbody2D rigidBody;
     new private Collider2D collider;
     private Animator animator;
     private bool isMovementEnabled = true;
+    private bool isFighting = false;
 
     private void Start()
     {
@@ -213,15 +212,18 @@ public class Player : MonoBehaviour
         animator.SetBool("IsRunning", Mathf.Abs(rigidBody.velocity.x) > runErrorThreshold);
         animator.SetBool("IsGround", IsPlayerOnGround());
         animator.SetFloat("YVelocity", rigidBody.velocity.y);
+        animator.SetBool("IsFighting", isFighting);
     }
 
-    public void DisablePlayerMovement()
+    public void StartEncounter()
     {
+        isFighting = true;
         isMovementEnabled = false;
     }
 
-    public void EnablePlayerMovement()
+    public void EndEncounter()
     {
+        isFighting = false;
         isMovementEnabled = true;
     }
 
