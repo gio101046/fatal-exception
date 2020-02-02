@@ -7,7 +7,7 @@ public class BugMovement : MonoBehaviour
     [SerializeField] private float secondsGoingLeft = 1;
     [SerializeField] private float secondsGoingRight = 1;
     [SerializeField] private float movementSpeed = 10;
-    [SerializeField] BoxCollider2D playerCollider;
+    [SerializeField] Collider2D playerCollider;
     [SerializeField] EventControls eventControls;
     [SerializeField] Player player;
 
@@ -26,7 +26,7 @@ public class BugMovement : MonoBehaviour
     private void Update()
     {
         if (HasEncounteredPlayer())
-            eventControls.TriggerEvent(playerCollider, GetComponent<BoxCollider2D>(), player);
+            eventControls.TriggerEvent(playerCollider, GetComponent<Collider2D>(), player);
 
         var totalFramesGoingLeft = framesPerSecond * secondsGoingLeft;
         var totalFramesGoingRight = framesPerSecond * secondsGoingRight;

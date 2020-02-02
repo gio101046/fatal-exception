@@ -27,14 +27,14 @@ public class Player : MonoBehaviour
 
 
     private Rigidbody2D rigidBody;
-    new private BoxCollider2D collider;
+    new private Collider2D collider;
     private Animator animator;
     private bool isMovementEnabled = true;
 
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        collider = GetComponent<BoxCollider2D>();
+        collider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         currentHealth = startHealth;
         currentStamina = startStamina;
@@ -173,10 +173,10 @@ public class Player : MonoBehaviour
 
     private bool IsPlayerOnWall(bool ignoreGround = false)
     {
-        return IsPointOnWall(transform.position + new Vector3(0, collider.bounds.extents.y * 0.6f, 0), ignoreGround) ||
-               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.25f, 0), ignoreGround) ||
+        return IsPointOnWall(transform.position + new Vector3(0, collider.bounds.extents.y * 0.52f, 0), ignoreGround) ||
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.24f, 0), ignoreGround) ||
                IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 0.8f, 0), ignoreGround) ||
-               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 1.5f, 0), ignoreGround);
+               IsPointOnWall(transform.position - new Vector3(0, collider.bounds.extents.y * 1.45f, 0), ignoreGround);
     }
 
     private bool IsPointOnWall(Vector2 position, bool ignoreGround = false)
