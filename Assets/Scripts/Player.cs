@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float runErrorThreshold = 0.05f;
     [SerializeField] private int startHealth = 3;
     [SerializeField] private int startStamina = 100;
-    [SerializeField] private int coffeValuePercent = 18;
+    [SerializeField] private int coffeValuePercent = 25;
     [SerializeField] private int bugStaminaDamagePercent = 15;
     [SerializeField] private float hurtVelocity = 15f;
     [SerializeField] private int fightSoundLength = 5;

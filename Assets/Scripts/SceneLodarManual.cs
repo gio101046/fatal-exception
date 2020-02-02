@@ -14,6 +14,14 @@ public class SceneLodarManual : MonoBehaviour
         button.onClick.AddListener(LoadScene);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            LoadScene();
+        }
+    }
+
     void LoadScene()
     {
         SceneManager.LoadScene("GameIntro");
