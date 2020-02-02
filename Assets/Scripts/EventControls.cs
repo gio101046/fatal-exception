@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 
 public class EventControls : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    [SerializeField] private Player player; 
     [SerializeField] private Camera camera;
     [SerializeField] private List<Tile> tiles;
     [SerializeField] private List<Tile> successTiles;
