@@ -9,6 +9,7 @@ public class EventControls : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField] private Camera camera;
+    [SerializeField] private GameObject music;
     [SerializeField] private List<Tile> tiles;
     [SerializeField] private List<Tile> successTiles;
     [SerializeField] private List<Tile> failTiles;
@@ -159,6 +160,17 @@ public class EventControls : MonoBehaviour
                .GetValueOrDefault();
     }
 
+    IEnumerator PlayVictoryMusic()
+    {
+        music = GameObject.Find("Music");
+        var audioSrc = music.GetComponent<AudioSource>();
+        audioSrc.Pause();
+        SoundManagerScript.PlaySound("win");
+        var clipSeconds = SoundManagerScript.audioSrc.clip.length;
+        yield return new WaitForSeconds(clipSeconds);
+        audioSrc.Play();
+    }
+
     private void PerformControlEvent()
     {
         nextControlAccumalator = 0;
@@ -185,6 +197,7 @@ public class EventControls : MonoBehaviour
                     // Destroy(currentEnemyCollider.gameObject);
                     // currentEnemyCollider = null;
                     hasFailed = false;
+                    StartCoroutine(PlayVictoryMusic());
                 }
             }
 

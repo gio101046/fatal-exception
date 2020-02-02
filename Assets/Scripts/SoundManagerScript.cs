@@ -8,7 +8,7 @@ public class SoundManagerScript : MonoBehaviour
     public static AudioClip jumpSound, screamSound, wrongButtonSound, 
         bugLaughSound, drinkSound, eatSound, punchSound, hardPunchSound, 
         slapSound, hardSlapSound, winSound;
-    static AudioSource audioSrc;
+    public static AudioSource audioSrc;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +23,7 @@ public class SoundManagerScript : MonoBehaviour
         hardPunchSound = Resources.Load<AudioClip>("Audio/HardPunch");
         slapSound = Resources.Load<AudioClip>("Audio/Slap");
         hardSlapSound = Resources.Load<AudioClip>("Audio/HardSlap");
+        winSound = Resources.Load<AudioClip>("Audio/Win");
 
         audioSrc = GetComponent<AudioSource>();
     }
@@ -68,6 +69,7 @@ public class SoundManagerScript : MonoBehaviour
                 audioSrc.PlayOneShot(hardSlapSound);
                 break;
             case "win":
+                audioSrc.clip = winSound;
                 audioSrc.PlayOneShot(winSound);
                 break;
 
