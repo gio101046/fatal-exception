@@ -85,6 +85,7 @@ public class Player : MonoBehaviour
 
     private void DrinkCoffee()
     {
+        SoundManagerScript.PlaySound("drink");
         int result = currentStamina + GetStaminaValueChange(coffeValuePercent);
         currentStamina = result < startStamina ? result : startStamina;
         staminaBar.size = new Vector2(staminaBar.size.x * (currentStamina/startStamina), staminaBar.size.y);
