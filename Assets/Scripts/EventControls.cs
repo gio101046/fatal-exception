@@ -38,7 +38,7 @@ public class EventControls : MonoBehaviour
 
     private bool eventDrawn = false;
     private bool eventTriggered = false;
-    private float eventCycleInSeconds = 3.5f;
+    private float eventCycleInSeconds = 2.8f;
     private int eventCycleAccumalator = 0;
     private int tileMapClearDelayAccumalator = 0;
     private EventControlTile currentEventControl;
