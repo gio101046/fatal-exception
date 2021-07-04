@@ -5,4 +5,4 @@ Fatal Exception was created by four people during the 2020 Global Game Jam using
 ![gif](https://i.imgur.com/OXhwngU.gif)
 
 # Play the Game
-Fatal Exception is currently hosted at http://fatalexception.herokuapp.com/.
+Fatal Exception is currently hosted at https://fatalexception.grodriguez.dev.
