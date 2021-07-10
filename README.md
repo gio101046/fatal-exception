@@ -1,4 +1,4 @@
-# Fatal Exception
+# Fatal Exception - A Unity Game
 Fatal Exception was created by four people during the 2020 Global Game Jam using Unity. For more information on the game and our submission visit https://globalgamejam.org/2020/games/fatal-exception-8.
 
 # Demo
